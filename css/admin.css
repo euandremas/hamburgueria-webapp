@@ -69,6 +69,13 @@ html[data-theme="dark"]{
   box-sizing: border-box;
 }
 
+/* ✅ FIX: viewport e overflow lateral (iOS/Safari) */
+html, body{
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 body{
   background: var(--bg);
   color: var(--text);
@@ -130,6 +137,9 @@ body.no-scroll{
   grid-template-columns: 280px 1fr;
   max-width: 100%;
   overflow-x: hidden;
+
+  /* ✅ FIX GRID: permite encolher filhos (senão estoura no mobile) */
+  min-width: 0;
 }
 
 .sidebar{
@@ -228,6 +238,9 @@ body.no-scroll{
   padding: 26px 28px;
   max-width: 100%;
   overflow-x: hidden;
+
+  /* ✅ FIX GRID: permite encolher conteúdo interno */
+  min-width: 0;
 }
 
 .pageHead h1{
@@ -251,6 +264,9 @@ body.no-scroll{
   box-shadow: var(--shadow);
   padding: 18px;
   max-width: 100%;
+
+  /* ✅ FIX GRID */
+  min-width: 0;
 }
 
 .cards{
@@ -258,6 +274,9 @@ body.no-scroll{
   grid-template-columns: repeat(4, minmax(180px, 1fr));
   gap: 18px;
   margin-bottom: 18px;
+
+  /* ✅ FIX GRID */
+  min-width: 0;
 }
 
 .kpi{
@@ -266,6 +285,9 @@ body.no-scroll{
   border-radius: var(--r);
   box-shadow: var(--shadow);
   padding: 18px;
+
+  /* ✅ FIX GRID */
+  min-width: 0;
 }
 .kpi__top{
   display:flex; align-items:center; justify-content:space-between;
@@ -336,19 +358,25 @@ body.no-scroll{
   grid-template-columns: 420px 1fr;
   gap: 18px;
   max-width: 100%;
+
+  /* ✅ FIX GRID: filhos podem encolher */
+  min-width: 0;
 }
 
 /* ✅ NOVO: mini-grid (Cidade / UF) no padrão do seu layout */
 .gridMini{
   display:grid;
-  grid-template-columns: 1fr 120px;
+  grid-template-columns: minmax(0, 1fr) 120px; /* ✅ FIX */
   gap: 12px;
   align-items: start;
+
+  /* ✅ FIX GRID */
+  min-width: 0;
 }
 
 /* form */
-.form{ display:grid; gap: 12px; margin-top: 12px; }
-.field{ display:grid; gap: 6px; }
+.form{ display:grid; gap: 12px; margin-top: 12px; min-width:0; }
+.field{ display:grid; gap: 6px; min-width:0; }
 .field span{ color: var(--muted); font-size: 14px; font-weight: 700; }
 
 /* Campos com fundo/borda visíveis */
@@ -357,6 +385,7 @@ body.no-scroll{
 .field textarea{
   width:100%;
   max-width: 100%;
+  min-width: 0; /* ✅ Safari/iOS + grid shrink */
   box-sizing: border-box; /* ✅ aqui é o mata-vazamento */
   padding: 11px 12px;
   border-radius: 12px;
@@ -388,17 +417,19 @@ body.no-scroll{
   opacity: 1;
 }
 
+/* ✅ FIX: inline não pode usar 1fr “puro” no iOS */
 .inline{
   display:grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto; /* ✅ FIX */
   gap: 10px;
   align-items:center;
+
+  /* ✅ FIX GRID */
+  min-width: 0;
 }
 
 /* =========================
    ✅ BOTÕES (hover + clique)
-   - sem mexer no menu (.nav__item)
-   - garante "Criar Pedido" forte mesmo com --soft
    ========================= */
 .btnPrimary{
   border:0;
@@ -414,29 +445,10 @@ body.no-scroll{
   gap: 10px;
   transition: transform .08s ease, filter .15s ease, box-shadow .15s ease;
 }
-
-/* ✅ FIX: btnPrimary--soft NÃO fica esmaecido */
-.btnPrimary--soft{
-  background: var(--accent);
-}
-
-/* Hover (todos os botões principais) */
-.btnPrimary:hover{
-  filter: brightness(.95);
-}
-
-/* Active/click (efeito de clique) */
-.btnPrimary:active{
-  transform: translateY(1px);
-  filter: brightness(.90);
-}
-
-/* ✅ disabled sem parecer "quebrado" */
-.btnPrimary:disabled{
-  opacity: .65;
-  cursor: not-allowed;
-  filter: none;
-}
+.btnPrimary--soft{ background: var(--accent); }
+.btnPrimary:hover{ filter: brightness(.95); }
+.btnPrimary:active{ transform: translateY(1px); filter: brightness(.90); }
+.btnPrimary:disabled{ opacity: .65; cursor: not-allowed; filter: none; }
 
 .btnGhost{
   border: 1.5px solid var(--line);
@@ -448,23 +460,10 @@ body.no-scroll{
   cursor:pointer;
   transition: transform .08s ease, background .15s ease, filter .15s ease;
 }
-
-/* hover mais bonito no claro e no escuro */
-.btnGhost:hover{
-  background: color-mix(in srgb, var(--panel) 80%, #000 20%);
-}
-html[data-theme="dark"] .btnGhost:hover{
-  background: color-mix(in srgb, var(--panel) 75%, var(--panelSoft));
-}
-
-.btnGhost:active{
-  transform: translateY(1px);
-  filter: brightness(.95);
-}
-.btnGhost:disabled{
-  opacity: .7;
-  cursor: not-allowed;
-}
+.btnGhost:hover{ background: color-mix(in srgb, var(--panel) 80%, #000 20%); }
+html[data-theme="dark"] .btnGhost:hover{ background: color-mix(in srgb, var(--panel) 75%, var(--panelSoft)); }
+.btnGhost:active{ transform: translateY(1px); filter: brightness(.95); }
+.btnGhost:disabled{ opacity: .7; cursor: not-allowed; }
 
 .btnSquare{
   border:0;
@@ -477,10 +476,7 @@ html[data-theme="dark"] .btnGhost:hover{
   transition: transform .08s ease, filter .15s ease;
 }
 .btnSquare:hover{ filter: brightness(.95); }
-.btnSquare:active{
-  transform: translateY(1px);
-  filter: brightness(.90);
-}
+.btnSquare:active{ transform: translateY(1px); filter: brightness(.90); }
 
 .plus{ color: var(--accent); font-weight: 900; margin-right: 6px; }
 
@@ -492,6 +488,7 @@ html[data-theme="dark"] .btnGhost:hover{
   border: 1.5px solid var(--line);
   background: linear-gradient(180deg, var(--panel) 0%, var(--panelSoft) 100%);
   max-width: 100%;
+  min-width: 0; /* ✅ FIX */
 }
 .table{ width:100%; border-collapse: collapse; }
 
@@ -500,7 +497,6 @@ html[data-theme="dark"] .btnGhost:hover{
   font-size: 13px;
   color: var(--muted);
   padding: 12px;
-
   background: color-mix(in srgb, var(--panel) 85%, #000 15%);
   border-bottom: 1.5px solid var(--line);
 }
@@ -530,10 +526,7 @@ html[data-theme="dark"] .btnGhost:hover{
   transition: transform .08s ease, background .15s ease, filter .15s ease;
 }
 .iconBtn:hover{ background: rgba(239,68,68,.10); }
-.iconBtn:active{
-  transform: translateY(1px);
-  filter: brightness(.95);
-}
+.iconBtn:active{ transform: translateY(1px); filter: brightness(.95); }
 
 /* dropzone */
 .dropzone{
@@ -548,11 +541,9 @@ html[data-theme="dark"] .btnGhost:hover{
   justify-items: center;
   align-content: center;
   max-width: 100%;
+  min-width: 0; /* ✅ FIX */
 }
-.dropzone.is-drag{
-  background: rgba(255,90,0,.12);
-  border-color: rgba(255,90,0,.75);
-}
+.dropzone.is-drag{ background: rgba(255,90,0,.12); border-color: rgba(255,90,0,.75); }
 .dropzone__title{ font-weight: 900; }
 .dropzone__sub{ color: var(--muted); font-size: 13px; }
 .dropzone__preview img{
@@ -566,12 +557,13 @@ html[data-theme="dark"] .btnGhost:hover{
 }
 
 /* orders */
-.orders{ display:grid; gap: 14px; margin-top: 12px; }
+.orders{ display:grid; gap: 14px; margin-top: 12px; min-width:0; }
 .orderCard{
   border-radius: 16px;
   padding: 16px;
   border: 2px solid transparent;
   background: var(--panelSoft);
+  min-width: 0;
 }
 .orderTop{
   display:flex; align-items:center; justify-content:space-between;
@@ -598,10 +590,7 @@ html[data-theme="dark"] .btnGhost:hover{
   color: var(--muted);
   font-size: 13px;
 }
-.orderBody{
-  margin-top: 12px;
-  color: var(--text);
-}
+.orderBody{ margin-top: 12px; color: var(--text); }
 .orderActions{
   margin-top: 12px;
   display:flex;
@@ -624,11 +613,7 @@ html[data-theme="dark"] .btnGhost:hover{
 .btnStatus--way:hover{ background: rgba(37,99,235,.12); }
 .btnStatus--done{ color: var(--green); border-color: rgba(22,163,74,.45); }
 .btnStatus--done:hover{ background: rgba(22,163,74,.12); }
-
-.btnStatus:active{
-  transform: translateY(1px);
-  filter: brightness(.95);
-}
+.btnStatus:active{ transform: translateY(1px); filter: brightness(.95); }
 
 .orderCard--prep{ background: rgba(249,115,22,.06); border-color: rgba(249,115,22,.28); }
 .orderCard--way{ background: rgba(37,99,235,.06); border-color: rgba(37,99,235,.28); }
@@ -639,6 +624,7 @@ html[data-theme="dark"] .btnGhost:hover{
   flex-wrap: wrap;
   gap: 8px;
   max-width: 100%;
+  min-width: 0;
 }
 .chip{
   border-radius: 999px;
@@ -689,12 +675,8 @@ html[data-theme="dark"] .btnGhost:hover{
   border-radius: 999px;
   transition:.2s ease;
 }
-.switch input:checked + .slider{
-  background: #16a34a;
-}
-.switch input:checked + .slider::after{
-  transform: translateX(24px);
-}
+.switch input:checked + .slider{ background: #16a34a; }
+.switch input:checked + .slider::after{ transform: translateX(24px); }
 
 /* toast */
 .toast{
@@ -756,11 +738,13 @@ html[data-theme="dark"] .btnGhost:hover{
   .panel{
     padding: 14px;
     max-width: 100%;
+    min-width: 0;
   }
 
   .main{
     padding-top: 72px;
     padding-left: 16px;
     padding-right: 16px;
+    min-width: 0;
   }
 }
