@@ -1,56 +1,401 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Admin - BurgerPlace</title>
+  <title>Burger Place Admin</title>
+
   <link rel="stylesheet" href="./css/base.css" />
   <link rel="stylesheet" href="./css/admin.css" />
 </head>
+
 <body>
-<header class="topbar">
-  <strong>🍔 BurgerPlace</strong>
-  <button onclick="Auth.logout()" class="btn btn--ghost">Sair</button>
-</header>
+  <div id="toast" class="toast is-hidden" aria-live="polite"></div>
 
-<div id="alert" class="alert is-hidden"></div>
+  <div class="app">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand__icon" aria-hidden="true">
+          <!-- burger icon -->
+          <svg viewBox="0 0 24 24" class="ico" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 13h12" />
+            <path d="M7 10c0-3 3-5 5-5s5 2 5 5" />
+            <path d="M5 16c0 2 2 4 7 4s7-2 7-4" />
+          </svg>
+        </div>
+        <div class="brand__text">
+          <div class="brand__name">Burger Place <span class="brand__accent">Admin</span></div>
+        </div>
+      </div>
 
-<div class="layout">
-  <nav class="sidebar">
-    <button class="tab is-active" data-tab="produtos">Produtos</button>
-    <button class="tab" data-tab="usuarios">Usuários</button>
-    <button class="tab" data-tab="pedidos">Pedidos</button>
-  </nav>
+      <nav class="nav" aria-label="Menu principal">
+        <button class="nav__item is-active" data-view="dashboard" type="button">
+          <span class="nav__ico" aria-hidden="true">
+            <!-- grid -->
+            <svg viewBox="0 0 24 24" class="ico" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7" rx="2"></rect>
+              <rect x="14" y="3" width="7" height="7" rx="2"></rect>
+              <rect x="3" y="14" width="7" height="7" rx="2"></rect>
+              <rect x="14" y="14" width="7" height="7" rx="2"></rect>
+            </svg>
+          </span>
+          <span>Painel</span>
+          <span class="nav__dot" aria-hidden="true"></span>
+        </button>
 
-  <main class="content">
-    <section id="produtos" class="panel is-active"></section>
-    <section id="usuarios" class="panel"></section>
-    <section id="pedidos" class="panel"></section>
-  </main>
-</div>
+        <button class="nav__item" data-view="produtos" type="button">
+          <span class="nav__ico" aria-hidden="true">
+            <!-- box -->
+            <svg viewBox="0 0 24 24" class="ico" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 8l-9-5-9 5 9 5 9-5Z"></path>
+              <path d="M3 8v8l9 5 9-5V8"></path>
+              <path d="M12 13v8"></path>
+            </svg>
+          </span>
+          <span>Produtos</span>
+        </button>
 
-<script src="./js/auth.js"></script>
-<script src="./js/data.js"></script>
-<script src="./js/ui.js"></script>
-<script src="./js/produtos.js"></script>
-<script src="./js/usuarios.js"></script>
-<script src="./js/pedidos.js"></script>
+        <button class="nav__item" data-view="usuarios" type="button">
+          <span class="nav__ico" aria-hidden="true">
+            <!-- users -->
+            <svg viewBox="0 0 24 24" class="ico" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </span>
+          <span>Usuários</span>
+        </button>
 
-<script>
-Auth.requireAuth();
+        <button class="nav__item" data-view="pedidos" type="button">
+          <span class="nav__ico" aria-hidden="true">
+            <!-- cart -->
+            <svg viewBox="0 0 24 24" class="ico" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.6 13.5a2 2 0 0 0 2 1.5h9.7a2 2 0 0 0 2-1.6L23 6H6"></path>
+            </svg>
+          </span>
+          <span>Pedidos</span>
+        </button>
 
-document.querySelectorAll(".tab").forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll(".tab").forEach(b => b.classList.remove("is-active"));
-    document.querySelectorAll(".panel").forEach(p => p.classList.remove("is-active"));
-    btn.classList.add("is-active");
-    document.getElementById(btn.dataset.tab).classList.add("is-active");
-  };
-});
+        <button class="nav__item" data-view="config" type="button">
+          <span class="nav__ico" aria-hidden="true">
+            <!-- gear -->
+            <svg viewBox="0 0 24 24" class="ico" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"></path>
+              <path d="M19.4 15a7.7 7.7 0 0 0 .1-1l2-1.5-2-3.5-2.4.5a7.8 7.8 0 0 0-1.7-1L15 6l-4-.5-1 2.1a7.8 7.8 0 0 0-1.7 1L5.9 8.5 3.9 12l2 1.5a7.7 7.7 0 0 0 .1 1l-2 1.5 2 3.5 2.4-.5a7.8 7.8 0 0 0 1.7 1L9 22l4 .5 1-2.1a7.8 7.8 0 0 0 1.7-1l2.4.5 2-3.5-2-1.5Z"></path>
+            </svg>
+          </span>
+          <span>Configurações</span>
+        </button>
+      </nav>
 
-Produtos.init();
-Usuarios.init();
-Pedidos.init();
-</script>
+      <div class="sidebar__footer">
+        <button id="btnLogout" class="logout" type="button" aria-label="Sair do sistema">
+          <span class="nav__ico" aria-hidden="true">
+            <!-- logout -->
+            <svg viewBox="0 0 24 24" class="ico" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <path d="M16 17l5-5-5-5"></path>
+              <path d="M21 12H9"></path>
+            </svg>
+          </span>
+          <span>Sair</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <!-- DASHBOARD -->
+      <section class="view is-active" id="view-dashboard">
+        <header class="pageHead">
+          <h1>Painel</h1>
+          <p>Visão geral do sistema</p>
+        </header>
+
+        <div class="cards">
+          <div class="kpi">
+            <div class="kpi__top">
+              <span>Total de Pedidos</span>
+              <span class="kpi__ico kpi__ico--blue" aria-hidden="true">
+                <svg viewBox="0 0 24 24" class="ico" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 6h15l-1.5 9h-12L6 6Z"></path>
+                  <path d="M6 6 5 3H2"></path>
+                  <circle cx="9" cy="20" r="1"></circle>
+                  <circle cx="18" cy="20" r="1"></circle>
+                </svg>
+              </span>
+            </div>
+            <div class="kpi__val" id="kpiTotalPedidos">0</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi__top">
+              <span>Em Preparação</span>
+              <span class="kpi__ico kpi__ico--orange" aria-hidden="true">
+                <svg viewBox="0 0 24 24" class="ico" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="9"></circle>
+                  <path d="M12 7v6l4 2"></path>
+                </svg>
+              </span>
+            </div>
+            <div class="kpi__val" id="kpiPreparacao">0</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi__top">
+              <span>Entregues</span>
+              <span class="kpi__ico kpi__ico--green" aria-hidden="true">
+                <svg viewBox="0 0 24 24" class="ico" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 6 9 17l-5-5"></path>
+                </svg>
+              </span>
+            </div>
+            <div class="kpi__val" id="kpiEntregues">0</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi__top">
+              <span>Produtos Cadastrados</span>
+              <span class="kpi__ico kpi__ico--violet" aria-hidden="true">
+                <svg viewBox="0 0 24 24" class="ico" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 8l-9-5-9 5 9 5 9-5Z"></path>
+                  <path d="M3 8v8l9 5 9-5V8"></path>
+                </svg>
+              </span>
+            </div>
+            <div class="kpi__val" id="kpiProdutos">0</div>
+          </div>
+        </div>
+
+        <section class="panel">
+          <h2>Atividade Recente</h2>
+          <div class="activity" id="activityList"></div>
+        </section>
+      </section>
+
+      <!-- PRODUTOS -->
+      <section class="view" id="view-produtos">
+        <header class="pageHead">
+          <h1>Produtos</h1>
+          <p>Gerencie o cardápio da hamburgueria</p>
+        </header>
+
+        <div class="grid2">
+          <section class="panel">
+            <h2><span class="plus">+</span> Novo Produto</h2>
+
+            <form id="formProduto" class="form">
+              <label class="field">
+                <span>Tipo</span>
+                <select id="pTipo" required>
+                  <option value="">Selecione...</option>
+                  <option>Hambúrguer</option>
+                  <option>Acompanhamento</option>
+                  <option>Bebida</option>
+                  <option>Combo</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Nome do Produto</span>
+                <input id="pNome" type="text" placeholder="Ex: X-Bacon" required />
+              </label>
+
+              <label class="field">
+                <span>Preço (R$)</span>
+                <input id="pPreco" type="number" step="0.01" min="0" placeholder="0,00" required />
+              </label>
+
+              <label class="field">
+                <span>Descrição</span>
+                <textarea id="pDesc" rows="4" placeholder="Ingredientes e detalhes..." required></textarea>
+              </label>
+
+              <div class="field">
+                <span>Imagem do Produto</span>
+
+                <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Enviar imagem do produto">
+                  <input id="pImagem" type="file" accept="image/*" hidden />
+                  <div class="dropzone__content">
+                    <div class="dropzone__title">Arraste e solte a imagem aqui</div>
+                    <div class="dropzone__sub">ou clique para selecionar um arquivo</div>
+                  </div>
+                  <div class="dropzone__preview" id="dropPreview"></div>
+                </div>
+              </div>
+
+              <button class="btnPrimary" type="submit">
+                <span class="btnIco">+</span> Produto
+              </button>
+            </form>
+          </section>
+
+          <section class="panel">
+            <h2>Produtos Cadastrados (<span id="prodCount">0</span>)</h2>
+
+            <div class="tableWrap">
+              <table class="table" id="tableProdutos">
+                <thead>
+                  <tr>
+                    <th>Imagem</th>
+                    <th>Tipo</th>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th class="right">Preço</th>
+                    <th class="right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- USUÁRIOS -->
+      <section class="view" id="view-usuarios">
+        <header class="pageHead">
+          <h1>Usuários</h1>
+          <p>Gerenciar os usuários do sistema</p>
+        </header>
+
+        <div class="grid2">
+          <section class="panel">
+            <h2><span class="plus">+</span> Novo usuário</h2>
+
+            <form id="formUsuario" class="form">
+              <label class="field">
+                <span>Nome Completo</span>
+                <input id="uNome" type="text" placeholder="Ex: João Silva" required />
+              </label>
+
+              <label class="field">
+                <span>Usuário</span>
+                <div class="inline">
+                  <input id="uUser" type="text" placeholder="joao.silva" required />
+                  <button id="btnCheckUser" class="btnGhost" type="button" aria-label="Verificar disponibilidade do usuário">
+                    Verificar
+                  </button>
+                </div>
+                <small id="userHint" class="hint">Sugestão automática baseada no nome. Você pode editar.</small>
+              </label>
+
+              <label class="field">
+                <span>Senha</span>
+                <input id="uSenha" type="password" minlength="6" placeholder="Mínimo 6 caracteres" required />
+              </label>
+
+              <button class="btnPrimary" type="submit">
+                <span class="btnIco">+</span> Usuário
+              </button>
+            </form>
+          </section>
+
+          <section class="panel">
+            <h2>Usuários Cadastrados (<span id="userCount">0</span>)</h2>
+
+            <div class="tableWrap">
+              <table class="table" id="tableUsuarios">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Usuário</th>
+                    <th class="right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- PEDIDOS -->
+      <section class="view" id="view-pedidos">
+        <header class="pageHead">
+          <h1>Pedidos</h1>
+          <p>Gerenciar os pedidos da hamburgueria</p>
+        </header>
+
+        <div class="grid2">
+          <section class="panel">
+            <h2><span class="plus">+</span> Novo Pedido</h2>
+
+            <form id="formPedido" class="form">
+              <label class="field">
+                <span>Cliente</span>
+                <select id="oCliente" required></select>
+              </label>
+
+              <label class="field">
+                <span>Produto</span>
+                <div class="inline">
+                  <select id="oProduto"></select>
+                  <button id="btnAddItem" class="btnSquare" type="button" aria-label="Adicionar produto ao pedido">+</button>
+                </div>
+              </label>
+
+              <div class="field">
+                <span>Itens do pedido</span>
+                <div class="chips" id="orderItems"></div>
+              </div>
+
+              <label class="field">
+                <span>ETA (minutos)</span>
+                <input id="oEta" type="number" min="1" value="20" required />
+              </label>
+
+              <button class="btnPrimary btnPrimary--soft" type="submit">
+                <span class="btnIco">+</span> Criar Pedido
+              </button>
+            </form>
+          </section>
+
+          <section class="panel">
+            <h2>Lista de Pedidos (<span id="orderCount">0</span>)</h2>
+            <div class="orders" id="ordersList"></div>
+          </section>
+        </div>
+      </section>
+
+      <!-- CONFIG -->
+      <section class="view" id="view-config">
+        <header class="pageHead">
+          <h1>Configurações</h1>
+          <p>Preferências do sistema</p>
+        </header>
+
+        <section class="panel">
+          <div class="rowBetween">
+            <div>
+              <h2>Modo escuro</h2>
+              <p class="muted">Ative para reduzir brilho e melhorar conforto.</p>
+            </div>
+
+            <label class="switch" aria-label="Alternar modo escuro">
+              <input id="darkToggle" type="checkbox" />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <!-- IMPORTS: ORDEM IMPORTA -->
+  <script src="./js/auth.js"></script>
+  <script src="./js/store.js"></script>
+  <script src="./js/ui.js"></script>
+  <script src="./js/admin.js"></script>
+
+  <script>
+    Auth.requireAuth();
+    Admin.init();
+  </script>
 </body>
 </html>

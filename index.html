@@ -3,41 +3,63 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Hamburgueria Admin — Login</title>
+  <title>Burger Place Admin</title>
+
   <link rel="stylesheet" href="./css/base.css" />
   <link rel="stylesheet" href="./css/login.css" />
 </head>
 <body>
-  <div class="container">
-    <main class="card login">
-      <div class="brand">
-        <div class="brand__icon">🍔</div>
-        <div>
-          <h1>BurgerPlace</h1>
-          <small>Painel Administrativo</small>
-        </div>
-      </div>
+  <main class="login-wrapper">
+    <div class="login-header">
+      <div class="login-logo" aria-hidden="true">🍔</div>
+      <h1>Burger Place Admin</h1>
+      <p>Sistema de Gestão de Hamburgueria</p>
+    </div>
 
-      <div id="alert" class="alert is-hidden"></div>
+    <section class="login-card">
+      <h2>sua conta</h2>
 
-      <form id="loginForm" class="form">
+      <div id="alert" class="alert is-hidden" aria-live="polite"></div>
+
+      <form id="loginForm" class="form" autocomplete="on">
         <label class="field">
           <span>E-mail</span>
-          <input id="email" type="email" required />
+          <input
+            id="email"
+            type="email"
+            placeholder="seu@email.com"
+            autocomplete="email"
+            required
+          />
         </label>
 
         <label class="field">
           <span>Senha</span>
-          <input id="password" type="password" required />
+          <input
+            id="password"
+            type="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            required
+          />
         </label>
 
-        <button class="btn btn--primary">Entrar</button>
-        <p class="hint">Demo: admin@burger.com / 123456</p>
+        <button class="btn btn--primary btn-login" type="submit">
+          Entrar
+        </button>
       </form>
-    </main>
-  </div>
+
+      <p class="login-hint">Use qualquer e-mail e senha para testar</p>
+    </section>
+
+    <footer class="login-footer">
+      © 2025 Burger Place Admin. Todos os direitos reservados.
+    </footer>
+  </main>
 
   <script src="./js/auth.js"></script>
-  <script>Auth.redirectIfLoggedIn();</script>
+  <script>
+    Auth.redirectIfLoggedIn();
+  </script>
 </body>
 </html>
