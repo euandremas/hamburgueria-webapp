@@ -13,7 +13,7 @@ Projetos e Práticas de Extensão II.
 ## 🌐 Deploy
 
 Acesse o sistema em produção:
-https://SEU_USUARIO.github.io/NOME_DO_REPO
+https://https://euandremas.github.io/hamburgueria-webapp/index.html
 
 ## 📱 Funcionalidades
 
