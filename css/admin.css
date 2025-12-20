@@ -157,12 +157,11 @@ body.no-scroll{
   gap:12px;
   padding: 10px 8px;
 }
-.brand__icon{
-  width:44px;height:44px;
-  border-radius: 12px;
-  display:grid;place-items:center;
-  background: rgba(255,255,255,.06);
-  color: var(--accent);
+.brand__icon--burger{
+  font-size: 22px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
 }
 .brand__name{
   font-size: 20px;
