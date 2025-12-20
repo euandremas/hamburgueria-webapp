@@ -169,8 +169,10 @@ body.no-scroll{
   color: var(--sidebarText);
   letter-spacing: .2px;
 }
-.brand__accent{ color: var(--accent); }
+.brand__accent{
+  color: var(--accent);
   font-size: 22px;
+}
 
 /* nav */
 .nav{
