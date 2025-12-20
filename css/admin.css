@@ -1,9 +1,17 @@
 :root{
-  --bg:#f6f7fb;
+  /* Light theme (contraste reforçado) */
+  --bg:#eef1f8;
   --panel:#ffffff;
-  --border:#e6e8ef;
-  --text:#0e1116;
-  --muted:#5d6676;
+
+  /* ✅ fundo suave dos quadros (mais escuro que o bg pra dar contraste “bonito”) */
+  --panelSoft:#e6ecf6;
+
+  /* bordas/linhas realmente visíveis no claro */
+  --border:#b8c0d4;
+  --line:#aeb7cc;
+
+  --text:#0b0e14;
+  --muted:#4f5a70;
 
   --sidebar:#0f172a;
   --sidebar2:#0b1223;
@@ -17,14 +25,27 @@
   --blue:#2563eb;
   --violet:#7c3aed;
 
-  --shadow: 0 18px 40px rgba(0,0,0,.08);
+  --shadow: 0 18px 40px rgba(0,0,0,.10);
   --r:18px;
+
+  /* Campos (claro) - com presença real */
+  --fieldBg:#e9eef8;
+  --fieldBgFocus:#ffffff;
+  --fieldBorder:#b3bdd4;
+  --fieldBorderFocus: rgba(255,90,0,.75);
 }
 
 html[data-theme="dark"]{
   --bg:#0b1220;
   --panel:#0f172a;
   --border:#1f2a44;
+
+  /* ✅ um "panelSoft" bem sutil no escuro (não muda teu look top) */
+  --panelSoft:#0c1426;
+
+  /* no escuro a linha vira algo mais suave */
+  --line:#223050;
+
   --text:#eaf0ff;
   --muted:#9aa6be;
 
@@ -33,26 +54,17 @@ html[data-theme="dark"]{
   --sidebarText:#d7dde7;
 
   --shadow: 0 18px 40px rgba(0,0,0,.35);
+
+  /* Campos (escuro) - mantém o look top */
+  --fieldBg: rgba(255,255,255,.02);
+  --fieldBgFocus: rgba(255,255,255,.03);
+  --fieldBorder: #223050;
+  --fieldBorderFocus: rgba(255,90,0,.50);
 }
 
 body{
   background: var(--bg);
   color: var(--text);
-}
-
-/* Icon base (para SVGs ficarem fiéis e consistentes) */
-.ico{
-  width: 20px;
-  height: 20px;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* Acessibilidade: foco visível */
-:where(button, a, input, select, textarea, .dropzone):focus-visible{
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(255,90,0,.18);
-  border-color: rgba(255,90,0,.55);
 }
 
 /* App layout */
@@ -171,9 +183,10 @@ body{
 .view{ display:none; }
 .view.is-active{ display:block; }
 
+/* Panels e KPIs com linha mais forte no claro */
 .panel{
-  background: var(--panel);
-  border: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--panel) 0%, var(--panelSoft) 100%);
+  border: 1.5px solid var(--line);
   border-radius: var(--r);
   box-shadow: var(--shadow);
   padding: 18px;
@@ -187,8 +200,8 @@ body{
 }
 
 .kpi{
-  background: var(--panel);
-  border: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--panel) 0%, var(--panelSoft) 100%);
+  border: 1.5px solid var(--line);
   border-radius: var(--r);
   box-shadow: var(--shadow);
   padding: 18px;
@@ -209,9 +222,6 @@ body{
   background: rgba(0,0,0,.04);
   color: var(--text);
 }
-html[data-theme="dark"] .kpi__ico{
-  background: rgba(255,255,255,.06);
-}
 .kpi__ico--blue{ background: rgba(37,99,235,.08); color: var(--blue); }
 .kpi__ico--orange{ background: rgba(249,115,22,.10); color: var(--orange); }
 .kpi__ico--green{ background: rgba(22,163,74,.10); color: var(--green); }
@@ -222,28 +232,41 @@ html[data-theme="dark"] .kpi__ico{
   gap: 12px;
   margin-top: 12px;
 }
+
+/* Atividade Recente com borda forte (modo claro) */
 .actItem{
   display:flex;
   align-items:center;
   gap: 14px;
   border-radius: 14px;
   padding: 14px;
-  border: 1px solid transparent;
+  border: 1.5px solid var(--line);
 }
 .actItem__ico{
   width:40px;height:40px;border-radius:999px;
   display:grid;place-items:center;
   color:#fff;
-  font-weight: 900;
 }
 .actItem__t{ font-weight: 800; }
 .actItem__s{ color: var(--muted); font-size: 13px; margin-top: 2px; }
 
-.act--green{ background: rgba(22,163,74,.08); border-color: rgba(22,163,74,.18); }
+/* fundos e bordas mais presentes */
+.act--green{
+  background: rgba(22,163,74,.10);
+  border-color: color-mix(in srgb, var(--green) 45%, var(--line));
+}
 .act--green .actItem__ico{ background: var(--green); }
-.act--orange{ background: rgba(249,115,22,.08); border-color: rgba(249,115,22,.18); }
+
+.act--orange{
+  background: rgba(249,115,22,.10);
+  border-color: color-mix(in srgb, var(--orange) 45%, var(--line));
+}
 .act--orange .actItem__ico{ background: var(--orange); }
-.act--blue{ background: rgba(37,99,235,.08); border-color: rgba(37,99,235,.18); }
+
+.act--blue{
+  background: rgba(37,99,235,.10);
+  border-color: color-mix(in srgb, var(--blue) 45%, var(--line));
+}
 .act--blue .actItem__ico{ background: var(--blue); }
 
 /* grid pages */
@@ -257,19 +280,34 @@ html[data-theme="dark"] .kpi__ico{
 .form{ display:grid; gap: 12px; margin-top: 12px; }
 .field{ display:grid; gap: 6px; }
 .field span{ color: var(--muted); font-size: 14px; font-weight: 700; }
-.field input, .field select, .field textarea{
+
+/* Campos com fundo/borda visíveis */
+.field input,
+.field select,
+.field textarea{
   width:100%;
   padding: 11px 12px;
   border-radius: 12px;
-  border: 1px solid var(--border);
-  background: transparent;
+  border: 1.5px solid var(--fieldBorder);
+  background: var(--fieldBg);
   color: var(--text);
   outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease, transform .08s ease, filter .15s ease;
 }
-.field input:focus, .field select:focus, .field textarea:focus{
-  border-color: rgba(255,90,0,.45);
-  box-shadow: 0 0 0 3px rgba(255,90,0,.12);
+
+.field input::placeholder,
+.field textarea::placeholder{
+  color: color-mix(in srgb, var(--muted) 70%, transparent);
 }
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  background: var(--fieldBgFocus);
+  border-color: var(--fieldBorderFocus);
+  box-shadow: 0 0 0 3px rgba(255,90,0,.18);
+}
+
 .inline{
   display:grid;
   grid-template-columns: 1fr auto;
@@ -277,11 +315,11 @@ html[data-theme="dark"] .kpi__ico{
   align-items:center;
 }
 
-.btnIco{
-  font-weight: 900;
-  line-height: 1;
-}
-
+/* =========================
+   ✅ BOTÕES (hover + clique)
+   - sem mexer no menu (.nav__item)
+   - garante "Criar Pedido" forte mesmo com --soft
+   ========================= */
 .btnPrimary{
   border:0;
   background: var(--accent);
@@ -294,26 +332,39 @@ html[data-theme="dark"] .kpi__ico{
   align-items:center;
   justify-content:center;
   gap: 10px;
+  transition: transform .08s ease, filter .15s ease, box-shadow .15s ease;
 }
+
+/* ✅ FIX: btnPrimary--soft NÃO fica esmaecido */
 .btnPrimary--soft{
-  background: rgba(255,90,0,.55);
+  background: var(--accent);
 }
-.btnPrimary:hover{ filter: brightness(.95); }
+
+/* Hover (todos os botões principais) */
+.btnPrimary:hover{
+  filter: brightness(.95);
+}
+
+/* Active/click (efeito de clique) */
+.btnPrimary:active{
+  transform: translateY(1px);
+  filter: brightness(.90);
+}
 
 .btnGhost{
-  border: 1px solid var(--border);
-  background: transparent;
+  border: 1.5px solid var(--line);
+  background: var(--panel);
   color: var(--text);
   border-radius: 12px;
   padding: 10px 12px;
   font-weight: 800;
   cursor:pointer;
+  transition: transform .08s ease, background .15s ease, filter .15s ease;
 }
-.btnGhost:hover{
-  background: rgba(0,0,0,.04);
-}
-html[data-theme="dark"] .btnGhost:hover{
-  background: rgba(255,255,255,.06);
+.btnGhost:hover{ background: rgba(0,0,0,.04); }
+.btnGhost:active{
+  transform: translateY(1px);
+  filter: brightness(.95);
 }
 
 .btnSquare{
@@ -324,36 +375,48 @@ html[data-theme="dark"] .btnGhost:hover{
   color:#fff;
   font-weight: 900;
   cursor:pointer;
+  transition: transform .08s ease, filter .15s ease;
 }
 .btnSquare:hover{ filter: brightness(.95); }
+.btnSquare:active{
+  transform: translateY(1px);
+  filter: brightness(.90);
+}
 
 .plus{ color: var(--accent); font-weight: 900; margin-right: 6px; }
 
 /* table */
-.tableWrap{ overflow:auto; margin-top: 12px; border-radius: 14px; border: 1px solid var(--border); }
+.tableWrap{
+  overflow:auto;
+  margin-top: 12px;
+  border-radius: 14px;
+  border: 1.5px solid var(--line);
+  background: linear-gradient(180deg, var(--panel) 0%, var(--panelSoft) 100%);
+}
 .table{ width:100%; border-collapse: collapse; }
+
 .table thead th{
   text-align:left;
   font-size: 13px;
   color: var(--muted);
   padding: 12px;
-  background: rgba(0,0,0,.03);
-}
-html[data-theme="dark"] .table thead th{
-  background: rgba(255,255,255,.04);
+
+  background: color-mix(in srgb, var(--panel) 85%, #000 15%);
+  border-bottom: 1.5px solid var(--line);
 }
 .table tbody td{
   padding: 12px;
-  border-top: 1px solid var(--border);
+  border-top: 1.5px solid var(--line);
   vertical-align: middle;
 }
+
 .right{text-align:right;}
 .trunc{ max-width: 520px; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
 
 .imgThumb{
   width:44px;height:44px;
   border-radius: 12px;
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--line);
   object-fit: cover;
 }
 
@@ -364,25 +427,32 @@ html[data-theme="dark"] .table thead th{
   padding: 8px;
   border-radius: 10px;
   color: #ef4444;
+  transition: transform .08s ease, background .15s ease, filter .15s ease;
 }
 .iconBtn:hover{ background: rgba(239,68,68,.10); }
+.iconBtn:active{
+  transform: translateY(1px);
+  filter: brightness(.95);
+}
 
 /* dropzone */
 .dropzone{
-  border: 2px dashed rgba(255,90,0,.35);
+  border: 2px dashed rgba(255,90,0,.45);
   border-radius: 16px;
   padding: 14px;
   cursor: pointer;
-  background: rgba(255,90,0,.04);
+  background: rgba(255,90,0,.06);
   display:grid;
   gap: 12px;
-}
-.dropzone:hover{
-  background: rgba(255,90,0,.06);
+
+  /* ✅ centraliza o texto */
+  text-align: center;
+  justify-items: center;
+  align-content: center;
 }
 .dropzone.is-drag{
-  background: rgba(255,90,0,.10);
-  border-color: rgba(255,90,0,.65);
+  background: rgba(255,90,0,.12);
+  border-color: rgba(255,90,0,.75);
 }
 .dropzone__title{ font-weight: 900; }
 .dropzone__sub{ color: var(--muted); font-size: 13px; }
@@ -391,11 +461,8 @@ html[data-theme="dark"] .table thead th{
   max-height: 220px;
   object-fit: contain;
   border-radius: 14px;
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--line);
   background: rgba(0,0,0,.02);
-}
-html[data-theme="dark"] .dropzone__preview img{
-  background: rgba(255,255,255,.04);
 }
 
 /* orders */
@@ -404,6 +471,7 @@ html[data-theme="dark"] .dropzone__preview img{
   border-radius: 16px;
   padding: 16px;
   border: 2px solid transparent;
+  background: var(--panelSoft);
 }
 .orderTop{
   display:flex; align-items:center; justify-content:space-between;
@@ -440,6 +508,7 @@ html[data-theme="dark"] .dropzone__preview img{
   gap: 10px;
   flex-wrap: wrap;
 }
+
 .btnStatus{
   border-radius: 999px;
   padding: 10px 12px;
@@ -447,17 +516,23 @@ html[data-theme="dark"] .dropzone__preview img{
   border: 2px solid transparent;
   cursor:pointer;
   background: transparent;
+  transition: transform .08s ease, filter .15s ease, background .15s ease;
 }
-.btnStatus--prep{ color: var(--orange); border-color: rgba(249,115,22,.35); }
-.btnStatus--prep:hover{ background: rgba(249,115,22,.10); }
-.btnStatus--way{ color: var(--blue); border-color: rgba(37,99,235,.35); }
-.btnStatus--way:hover{ background: rgba(37,99,235,.10); }
-.btnStatus--done{ color: var(--green); border-color: rgba(22,163,74,.35); }
-.btnStatus--done:hover{ background: rgba(22,163,74,.10); }
+.btnStatus--prep{ color: var(--orange); border-color: rgba(249,115,22,.45); }
+.btnStatus--prep:hover{ background: rgba(249,115,22,.12); }
+.btnStatus--way{ color: var(--blue); border-color: rgba(37,99,235,.45); }
+.btnStatus--way:hover{ background: rgba(37,99,235,.12); }
+.btnStatus--done{ color: var(--green); border-color: rgba(22,163,74,.45); }
+.btnStatus--done:hover{ background: rgba(22,163,74,.12); }
 
-.orderCard--prep{ background: rgba(249,115,22,.06); border-color: rgba(249,115,22,.25); }
-.orderCard--way{ background: rgba(37,99,235,.06); border-color: rgba(37,99,235,.25); }
-.orderCard--done{ background: rgba(22,163,74,.06); border-color: rgba(22,163,74,.25); }
+.btnStatus:active{
+  transform: translateY(1px);
+  filter: brightness(.95);
+}
+
+.orderCard--prep{ background: rgba(249,115,22,.06); border-color: rgba(249,115,22,.28); }
+.orderCard--way{ background: rgba(37,99,235,.06); border-color: rgba(37,99,235,.28); }
+.orderCard--done{ background: rgba(22,163,74,.06); border-color: rgba(22,163,74,.28); }
 
 .chips{
   display:flex;
@@ -468,14 +543,11 @@ html[data-theme="dark"] .dropzone__preview img{
   border-radius: 999px;
   padding: 8px 10px;
   background: rgba(0,0,0,.05);
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--line);
   display:flex;
   gap: 8px;
   align-items:center;
   font-weight: 800;
-}
-html[data-theme="dark"] .chip{
-  background: rgba(255,255,255,.06);
 }
 .chip button{
   border:0;
@@ -519,19 +591,22 @@ html[data-theme="dark"] .chip{
   transform: translateX(24px);
 }
 
-/* toast */
+/* toast (tamanho e centralização corrigidos) */
 .toast{
   position: fixed;
   top: 16px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1px solid var(--border);
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1.5px solid var(--line);
   background: var(--panel);
   box-shadow: var(--shadow);
   z-index: 9999;
-  min-width: min(520px, calc(100% - 22px));
+
+  width: fit-content;
+  max-width: min(420px, calc(100% - 24px));
+  text-align: center;
 }
 .toast.is-hidden{ display:none; }
 
@@ -547,62 +622,4 @@ html[data-theme="dark"] .chip{
     border-right: 0;
     border-bottom: 1px solid rgba(255,255,255,.06);
   }
-}
-/* ================================
-   FIX CONTRASTE (MODO CLARO)
-   ================================ */
-
-/* Variáveis para inputs */
-:root{
-  --inputBg: #f3f4f6;
-  --inputBorder: #cfd6e3;
-  --inputBorderHover: #b8c1d4;
-  --inputPlaceholder: #6b7280;
-}
-
-/* No dark mantém “clean” */
-html[data-theme="dark"]{
-  --inputBg: rgba(255,255,255,.04);
-  --inputBorder: #26324f;
-  --inputBorderHover: #324166;
-  --inputPlaceholder: rgba(234,240,255,.55);
-}
-
-/* Campos: agora com fundo e borda visíveis */
-.field input,
-.field select,
-.field textarea{
-  background: var(--inputBg);
-  border-color: var(--inputBorder);
-}
-
-/* Hover melhora leitura */
-.field input:hover,
-.field select:hover,
-.field textarea:hover{
-  border-color: var(--inputBorderHover);
-}
-
-/* Placeholder legível */
-.field input::placeholder,
-.field textarea::placeholder{
-  color: var(--inputPlaceholder);
-}
-
-/* Tabelas: header mais visível no claro */
-.table thead th{
-  background: rgba(15, 23, 42, .04);
-}
-
-/* Botões ghost (Verificar) no claro: um pouco mais “botão” */
-.btnGhost{
-  border-color: var(--inputBorder);
-}
-.btnGhost:hover{
-  background: rgba(15, 23, 42, .04);
-}
-
-/* Chips no claro ficam mais “separados” */
-.chip{
-  background: rgba(15, 23, 42, .04);
 }

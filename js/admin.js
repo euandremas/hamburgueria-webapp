@@ -101,7 +101,9 @@ const Admin = (() => {
         <td>
           ${
             p.imgDataUrl
-              ? `<img class="imgThumb" src="${p.imgDataUrl}" alt="Imagem ${UI.escapeHtml(p.nome)}" />`
+              ? `<img class="imgThumb" src="${p.imgDataUrl}" alt="Imagem ${UI.escapeHtml(
+                  p.nome
+                )}" />`
               : `<div class="imgThumb" style="display:grid;place-items:center;color:var(--muted)">—</div>`
           }
         </td>
@@ -127,6 +129,7 @@ const Admin = (() => {
         s.produtos.splice(idx, 1);
 
         Store.addActivity("new", "Produto removido", `Produto: ${prod.nome}`);
+        Store.save(); // ✅ persistência
         UI.toast("Produto removido.");
 
         renderProdutos();
@@ -148,6 +151,8 @@ const Admin = (() => {
     dz.addEventListener("click", openPicker);
 
     // teclado (acessibilidade e UX)
+    dz.setAttribute("tabindex", "0");
+    dz.setAttribute("role", "button");
     dz.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
@@ -214,7 +219,9 @@ const Admin = (() => {
       };
 
       s.produtos.unshift(p);
+
       Store.addActivity("new", "Produto cadastrado", `Produto: ${nome}`);
+      Store.save(); // ✅ persistência
       UI.toast("Produto cadastrado!");
 
       // reset
@@ -266,6 +273,7 @@ const Admin = (() => {
         s.usuarios.splice(idx, 1);
 
         Store.addActivity("new", "Usuário removido", `Usuário: ${u.username}`);
+        Store.save(); // ✅ persistência
         UI.toast("Usuário removido.");
 
         renderUsuarios();
@@ -339,6 +347,7 @@ const Admin = (() => {
       s.usuarios.unshift({ id: s.seq.usuario++, nome, username, senha });
 
       Store.addActivity("new", "Novo usuário cadastrado", `Usuário: ${username}`);
+      Store.save(); // ✅ persistência
       UI.toast("Usuário cadastrado!");
 
       form.reset();
@@ -518,6 +527,7 @@ const Admin = (() => {
           `Atualizado agora`
         );
 
+        Store.save(); // ✅ persistência
         UI.toast("Status atualizado!");
         renderOrders();
         refreshDashboard();
@@ -534,7 +544,8 @@ const Admin = (() => {
         const newEta = Math.max(1, Number(inp.value || 1));
         o.etaMin = newEta;
 
-        Store.addActivity("prep", `ETA atualizado`, `Pedido #${String(id).padStart(3, "0")} — ${newEta} min`);
+        Store.addActivity("prep", "ETA atualizado", `Pedido #${String(id).padStart(3, "0")} — ${newEta} min`);
+        Store.save(); // ✅ persistência
         UI.toast("ETA atualizado!");
 
         refreshDashboard();
@@ -586,6 +597,8 @@ const Admin = (() => {
         "Novo pedido",
         `Cliente: ${s.usuarios.find((u) => u.id === clienteId)?.nome || "—"} — agora`
       );
+
+      Store.save(); // ✅ persistência
       UI.toast("Pedido criado!");
 
       pendingItems = [];
