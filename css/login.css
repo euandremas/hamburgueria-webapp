@@ -1,0 +1,12 @@
+body{
+  background:url("../img/bg-burger.jpg") center/cover no-repeat fixed;
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.45);
+  z-index:-1;
+}
+.login{width:320px}
+.brand{display:flex;gap:10px;margin-bottom:10px}
+.brand__icon{font-size:32px}

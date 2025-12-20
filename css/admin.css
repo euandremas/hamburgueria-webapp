@@ -1,0 +1,10 @@
+.topbar{
+  display:flex;justify-content:space-between;
+  padding:10px;border-bottom:1px solid #ddd;
+}
+.layout{display:grid;grid-template-columns:200px 1fr}
+.sidebar{display:grid;gap:8px;padding:10px}
+.tab{padding:10px;border:1px solid #ddd;border-radius:8px}
+.tab.is-active{background:#eef}
+.panel{display:none;padding:20px}
+.panel.is-active{display:block}

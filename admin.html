@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin - BurgerPlace</title>
+  <link rel="stylesheet" href="./css/base.css" />
+  <link rel="stylesheet" href="./css/admin.css" />
+</head>
+<body>
+<header class="topbar">
+  <strong>🍔 BurgerPlace</strong>
+  <button onclick="Auth.logout()" class="btn btn--ghost">Sair</button>
+</header>
+
+<div id="alert" class="alert is-hidden"></div>
+
+<div class="layout">
+  <nav class="sidebar">
+    <button class="tab is-active" data-tab="produtos">Produtos</button>
+    <button class="tab" data-tab="usuarios">Usuários</button>
+    <button class="tab" data-tab="pedidos">Pedidos</button>
+  </nav>
+
+  <main class="content">
+    <section id="produtos" class="panel is-active"></section>
+    <section id="usuarios" class="panel"></section>
+    <section id="pedidos" class="panel"></section>
+  </main>
+</div>
+
+<script src="./js/auth.js"></script>
+<script src="./js/data.js"></script>
+<script src="./js/ui.js"></script>
+<script src="./js/produtos.js"></script>
+<script src="./js/usuarios.js"></script>
+<script src="./js/pedidos.js"></script>
+
+<script>
+Auth.requireAuth();
+
+document.querySelectorAll(".tab").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll(".tab").forEach(b => b.classList.remove("is-active"));
+    document.querySelectorAll(".panel").forEach(p => p.classList.remove("is-active"));
+    btn.classList.add("is-active");
+    document.getElementById(btn.dataset.tab).classList.add("is-active");
+  };
+});
+
+Produtos.init();
+Usuarios.init();
+Pedidos.init();
+</script>
+</body>
+</html>
