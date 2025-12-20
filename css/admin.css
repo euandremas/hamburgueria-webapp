@@ -67,6 +67,54 @@ body{
   color: var(--text);
 }
 
+/* =========================
+   ✅ MOBILE MENU (protótipo)
+   ========================= */
+
+/* Overlay */
+.overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease;
+  z-index: 1000;
+}
+.overlay.is-active{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Botão ☰/✕ */
+.menu-toggle{
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1300;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1.5px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  display: none; /* aparece só no mobile */
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform .08s ease, filter .15s ease;
+}
+.menu-toggle:hover{ filter: brightness(.97); }
+.menu-toggle:active{ transform: translateY(1px); filter: brightness(.93); }
+
+/* trava scroll quando menu abre */
+body.no-scroll{
+  overflow: hidden;
+}
+
 /* App layout */
 .app{
   min-height: 100vh;
@@ -649,17 +697,50 @@ html[data-theme="dark"] .btnGhost:hover{
 }
 .toast.is-hidden{ display:none; }
 
-/* responsive */
+/* =========================
+   RESPONSIVO (ajustado)
+   - 1100px: grid/cards ok
+   - 768px: drawer menu (protótipo)
+   ========================= */
 @media (max-width: 1100px){
   .cards{ grid-template-columns: repeat(2, minmax(180px,1fr)); }
   .grid2{ grid-template-columns: 1fr; }
   .gridMini{ grid-template-columns: 1fr; } /* ✅ no mobile, cidade/uf empilha */
   .app{ grid-template-columns: 1fr; }
+
+  /* ✅ Ajuste: NÃO transforma sidebar em sticky no mobile.
+     Aqui a sidebar ainda existe para tablets/menores, mas quem manda no mobile é o @media 768px abaixo. */
   .sidebar{
-    position: sticky;
-    top: 0;
-    z-index: 10;
     border-right: 0;
-    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+}
+
+/* ✅ MOBILE REAL: drawer lateral + botão topo + overlay */
+@media (max-width: 768px){
+  .menu-toggle{
+    display: inline-flex;
+  }
+
+  .sidebar{
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    max-width: 85vw;
+    z-index: 1200;
+
+    transform: translateX(-110%);
+    transition: transform .28s ease;
+
+    border-right: 1px solid rgba(255,255,255,.06);
+  }
+  .sidebar.is-open{
+    transform: translateX(0);
+  }
+
+  /* dá espaço pro conteúdo não ficar atrás do botão */
+  .main{
+    padding-top: 72px;
   }
 }

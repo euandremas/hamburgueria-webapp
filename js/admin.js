@@ -17,6 +17,67 @@ const Admin = (() => {
   // pedidos: itens temporários do form
   let pendingItems = [];
 
+  // ✅ NOVO: Mobile menu (protótipo)
+  function setupMobileMenu() {
+    const menuBtn = document.getElementById("menuToggle");
+    const overlay = document.getElementById("overlay");
+    const sidebar = document.querySelector(".sidebar");
+
+    if (!menuBtn || !overlay || !sidebar) return;
+
+    const mqMobile = window.matchMedia("(max-width: 768px)");
+
+    const setBtn = (open) => {
+      // troca ícone: ☰ <-> ✕ (igual protótipo)
+      menuBtn.textContent = open ? "✕" : "☰";
+      menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      menuBtn.setAttribute("aria-label", open ? "Fechar menu" : "Abrir menu");
+    };
+
+    const open = () => {
+      if (!mqMobile.matches) return; // só no mobile
+      sidebar.classList.add("is-open");
+      overlay.classList.add("is-active");
+      document.body.classList.add("no-scroll"); // opcional (se existir no CSS)
+      setBtn(true);
+    };
+
+    const close = () => {
+      sidebar.classList.remove("is-open");
+      overlay.classList.remove("is-active");
+      document.body.classList.remove("no-scroll");
+      setBtn(false);
+    };
+
+    const toggle = () => {
+      const isOpen = sidebar.classList.contains("is-open");
+      isOpen ? close() : open();
+    };
+
+    menuBtn.addEventListener("click", toggle);
+    overlay.addEventListener("click", close);
+
+    // ESC fecha
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close();
+    });
+
+    // Clicar em item do menu fecha no mobile (melhor UX)
+    document.querySelectorAll(".nav__item").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (mqMobile.matches) close();
+      });
+    });
+
+    // Se virar desktop, garante sidebar “normal”
+    window.addEventListener("resize", () => {
+      if (!mqMobile.matches) close();
+    });
+
+    // estado inicial do botão
+    setBtn(false);
+  }
+
   function setActiveView(name) {
     document.querySelectorAll(".nav__item").forEach((b) =>
       b.classList.toggle("is-active", b.dataset.view === name)
@@ -378,7 +439,7 @@ const Admin = (() => {
     });
   }
 
-  // --- CEP helpers (no teu estilo: simples e direto) ---
+  // --- CEP helpers ---
   function onlyDigits(str) {
     return (str || "").replace(/\D/g, "");
   }
@@ -471,7 +532,6 @@ const Admin = (() => {
 
     btn.addEventListener("click", fetchCepAndFill);
 
-    // UX: se o cara digitar certinho, ao sair do campo ele já puxa
     cCep.addEventListener("blur", () => {
       if (onlyDigits(cCep.value).length === 8) fetchCepAndFill();
     });
@@ -872,6 +932,8 @@ const Admin = (() => {
 
     setupNav();
     setupLogout();
+
+    setupMobileMenu(); // ✅ NOVO (menu mobile + overlay)
 
     setupDropzone();
     setupProdutoForm();
