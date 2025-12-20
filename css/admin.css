@@ -62,9 +62,17 @@ html[data-theme="dark"]{
   --fieldBorderFocus: rgba(255,90,0,.50);
 }
 
+/* ✅ BLINDAGEM GLOBAL (mata overflow fantasma do iOS) */
+*,
+*::before,
+*::after{
+  box-sizing: border-box;
+}
+
 body{
   background: var(--bg);
   color: var(--text);
+  overflow-x: hidden; /* ✅ iOS: evita scroll lateral chato */
 }
 
 /* =========================
@@ -120,6 +128,8 @@ body.no-scroll{
   min-height: 100vh;
   display: grid;
   grid-template-columns: 280px 1fr;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .sidebar{
@@ -216,6 +226,8 @@ body.no-scroll{
 /* main */
 .main{
   padding: 26px 28px;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .pageHead h1{
@@ -238,6 +250,7 @@ body.no-scroll{
   border-radius: var(--r);
   box-shadow: var(--shadow);
   padding: 18px;
+  max-width: 100%;
 }
 
 .cards{
@@ -317,11 +330,12 @@ body.no-scroll{
 }
 .act--blue .actItem__ico{ background: var(--blue); }
 
-/* grid pages */
+/* ✅ GRID2 BASE (voltou!) — desktop */
 .grid2{
   display:grid;
   grid-template-columns: 420px 1fr;
   gap: 18px;
+  max-width: 100%;
 }
 
 /* ✅ NOVO: mini-grid (Cidade / UF) no padrão do seu layout */
@@ -342,6 +356,8 @@ body.no-scroll{
 .field select,
 .field textarea{
   width:100%;
+  max-width: 100%;
+  box-sizing: border-box; /* ✅ aqui é o mata-vazamento */
   padding: 11px 12px;
   border-radius: 12px;
   border: 1.5px solid var(--fieldBorder);
@@ -475,6 +491,7 @@ html[data-theme="dark"] .btnGhost:hover{
   border-radius: 14px;
   border: 1.5px solid var(--line);
   background: linear-gradient(180deg, var(--panel) 0%, var(--panelSoft) 100%);
+  max-width: 100%;
 }
 .table{ width:100%; border-collapse: collapse; }
 
@@ -527,11 +544,10 @@ html[data-theme="dark"] .btnGhost:hover{
   background: rgba(255,90,0,.06);
   display:grid;
   gap: 12px;
-
-  /* ✅ centraliza o texto */
   text-align: center;
   justify-items: center;
   align-content: center;
+  max-width: 100%;
 }
 .dropzone.is-drag{
   background: rgba(255,90,0,.12);
@@ -546,6 +562,7 @@ html[data-theme="dark"] .btnGhost:hover{
   border-radius: 14px;
   border: 1.5px solid var(--line);
   background: rgba(0,0,0,.02);
+  max-width: 100%;
 }
 
 /* orders */
@@ -621,6 +638,7 @@ html[data-theme="dark"] .btnGhost:hover{
   display:flex;
   flex-wrap: wrap;
   gap: 8px;
+  max-width: 100%;
 }
 .chip{
   border-radius: 999px;
@@ -631,6 +649,7 @@ html[data-theme="dark"] .btnGhost:hover{
   gap: 8px;
   align-items:center;
   font-weight: 800;
+  max-width: 100%;
 }
 .chip button{
   border:0;
@@ -645,7 +664,6 @@ html[data-theme="dark"] .btnGhost:hover{
 .muted{ color: var(--muted); margin: 6px 0 0; }
 .hint{ color: var(--muted); font-size: 12px; }
 
-/* ✅ hint de CEP com "estado" sem depender de JS */
 #cepHint.is-ok{ color: var(--green); }
 #cepHint.is-err{ color: var(--danger); }
 
@@ -678,7 +696,7 @@ html[data-theme="dark"] .btnGhost:hover{
   transform: translateX(24px);
 }
 
-/* toast (tamanho e centralização corrigidos) */
+/* toast */
 .toast{
   position: fixed;
   top: 16px;
@@ -699,17 +717,13 @@ html[data-theme="dark"] .btnGhost:hover{
 
 /* =========================
    RESPONSIVO (ajustado)
-   - 1100px: grid/cards ok
-   - 768px: drawer menu (protótipo)
    ========================= */
 @media (max-width: 1100px){
   .cards{ grid-template-columns: repeat(2, minmax(180px,1fr)); }
   .grid2{ grid-template-columns: 1fr; }
-  .gridMini{ grid-template-columns: 1fr; } /* ✅ no mobile, cidade/uf empilha */
+  .gridMini{ grid-template-columns: 1fr; }
   .app{ grid-template-columns: 1fr; }
 
-  /* ✅ Ajuste: NÃO transforma sidebar em sticky no mobile.
-     Aqui a sidebar ainda existe para tablets/menores, mas quem manda no mobile é o @media 768px abaixo. */
   .sidebar{
     border-right: 0;
   }
@@ -739,8 +753,14 @@ html[data-theme="dark"] .btnGhost:hover{
     transform: translateX(0);
   }
 
-  /* dá espaço pro conteúdo não ficar atrás do botão */
+  .panel{
+    padding: 14px;
+    max-width: 100%;
+  }
+
   .main{
     padding-top: 72px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }
