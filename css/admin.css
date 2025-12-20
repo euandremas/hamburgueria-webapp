@@ -397,6 +397,35 @@ body.no-scroll{
   outline: none;
   transition: border-color .15s ease, box-shadow .15s ease, background .15s ease, transform .08s ease, filter .15s ease;
 }
+/* =========================
+   FIX SELECT NO DARK MODE
+   ========================= */
+
+/* Aparência base do select */
+.field select{
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* 🔥 Corrige opções no modo escuro */
+html[data-theme="dark"] select,
+html[data-theme="dark"] option{
+  background-color: #0f172a;   /* mesmo panel escuro */
+  color: #eaf0ff;              /* texto visível */
+}
+
+/* Hover/selecionado no dropdown */
+html[data-theme="dark"] option:hover,
+html[data-theme="dark"] option:checked{
+  background-color: #2563eb;   /* azul consistente com o tema */
+  color: #ffffff;
+}
+
+/* Placeholder (option vazia) */
+html[data-theme="dark"] option[value=""]{
+  color: #9aa6be;              /* muted */
+}
 
 .field input::placeholder,
 .field textarea::placeholder{
