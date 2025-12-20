@@ -56,6 +56,19 @@
           <span>Produtos</span>
         </button>
 
+        <!-- ✅ NOVO: CLIENTES -->
+        <button class="nav__item" data-view="clientes" type="button">
+          <span class="nav__ico" aria-hidden="true">
+            <!-- user-check -->
+            <svg viewBox="0 0 24 24" class="ico" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+              <path d="M16 11l2 2 4-4"></path>
+            </svg>
+          </span>
+          <span>Clientes</span>
+        </button>
+
         <button class="nav__item" data-view="usuarios" type="button">
           <span class="nav__ico" aria-hidden="true">
             <!-- users -->
@@ -253,6 +266,101 @@
                 <tbody></tbody>
               </table>
             </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- ✅ CLIENTES -->
+      <section class="view" id="view-clientes">
+        <header class="pageHead">
+          <h1>Clientes</h1>
+          <p>Cadastro de clientes</p>
+        </header>
+
+        <div class="grid2">
+          <section class="panel">
+            <h2><span class="plus">+</span> Novo Cliente</h2>
+
+            <form id="formCliente" class="form">
+              <label class="field">
+                <span>Nome completo</span>
+                <input id="cNome" type="text" placeholder="Ex: Maria Silva" required />
+              </label>
+
+              <label class="field">
+                <span>Telefone</span>
+                <input id="cTel" type="tel" placeholder="Ex: (11) 99999-9999" />
+              </label>
+
+              <label class="field">
+                <span>E-mail</span>
+                <input id="cEmail" type="email" placeholder="Ex: maria@email.com" required />
+              </label>
+
+              <label class="field">
+                <span>CEP</span>
+                <div class="inline">
+                  <input id="cCep" inputmode="numeric" maxlength="9" placeholder="00000-000" required />
+                  <button id="btnBuscarCep" class="btnGhost" type="button" aria-label="Buscar CEP na BrasilAPI">
+                    Buscar
+                  </button>
+                </div>
+                <small id="cepHint" class="hint">Digite o CEP e clique em Buscar. Endereço vem automático 😎</small>
+              </label>
+
+              <label class="field">
+                <span>Rua</span>
+                <input id="cRua" type="text" placeholder="Preenchido via CEP" readonly />
+              </label>
+
+              <label class="field">
+                <span>Bairro</span>
+                <input id="cBairro" type="text" placeholder="Preenchido via CEP" readonly />
+              </label>
+
+              <div class="gridMini">
+                <label class="field">
+                  <span>Cidade</span>
+                  <input id="cCidade" type="text" placeholder="Preenchido via CEP" readonly />
+                </label>
+
+                <label class="field">
+                  <span>UF</span>
+                  <input id="cUf" type="text" placeholder="UF" readonly />
+                </label>
+              </div>
+
+              <label class="field">
+                <span>Número</span>
+                <input id="cNumero" type="text" placeholder="Ex: 123" required />
+              </label>
+
+              <button class="btnPrimary" type="submit">
+                <span class="btnIco">+</span> Cliente
+              </button>
+            </form>
+          </section>
+
+          <section class="panel">
+            <h2>Clientes Cadastrados (<span id="clientCount">0</span>)</h2>
+
+            <div class="tableWrap">
+              <table class="table" id="tableClientes">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Endereço</th>
+                    <th class="right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+
+            <p class="muted" style="margin-top:10px">
+              Dica: os clientes cadastrados aqui vão aparecer no select de <strong>Pedidos</strong>. ✅
+            </p>
           </section>
         </div>
       </section>

@@ -5,6 +5,7 @@ const Admin = (() => {
   const viewMap = {
     dashboard: "view-dashboard",
     produtos: "view-produtos",
+    clientes: "view-clientes", // ✅ NOVO
     usuarios: "view-usuarios",
     pedidos: "view-pedidos",
     config: "view-config",
@@ -26,10 +27,18 @@ const Admin = (() => {
       el?.classList.toggle("is-active", k === name);
     });
 
-    // quando entrar em pedidos, garante inputs/itens atualizados
     if (name === "pedidos") {
       refreshOrderInputs();
       renderOrders();
+    }
+
+    if (name === "clientes") {
+      renderClientes();
+      refreshOrderInputs(); // garante select de pedidos atualizado
+    }
+
+    if (name === "dashboard") {
+      refreshDashboard();
     }
   }
 
@@ -236,6 +245,238 @@ const Admin = (() => {
     });
   }
 
+  // ---------- CLIENTES (NOVO + BRASILAPI) ----------
+  function setupClientes() {
+    setupCepLookup();
+    setupClienteForm();
+    renderClientes();
+  }
+
+  function renderClientes() {
+    const elCount = document.getElementById("clientCount");
+    if (elCount) elCount.textContent = String((s.clientes || []).length);
+
+    const tbody = document.querySelector("#tableClientes tbody");
+    if (!tbody) return;
+
+    const list = s.clientes || [];
+
+    tbody.innerHTML = list
+      .map((c) => {
+        const addr = c.endereco
+          ? `${c.endereco.rua}, ${c.endereco.numero} — ${c.endereco.bairro} — ${c.endereco.cidade}/${c.endereco.uf} (CEP ${c.endereco.cep})`
+          : "—";
+
+        return `
+          <tr>
+            <td><strong>${UI.escapeHtml(c.nome)}</strong></td>
+            <td>${UI.escapeHtml(c.email)}</td>
+            <td class="trunc" title="${UI.escapeHtml(addr)}">${UI.escapeHtml(addr)}</td>
+            <td class="right">
+              <button class="iconBtn" data-del-cli="${c.id}" title="Excluir">🗑</button>
+            </td>
+          </tr>
+        `;
+      })
+      .join("");
+
+    tbody.querySelectorAll("[data-del-cli]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = Number(btn.getAttribute("data-del-cli"));
+        const idx = (s.clientes || []).findIndex((x) => x.id === id);
+        if (idx < 0) return;
+
+        // bloqueia se houver pedidos com esse cliente
+        const hasOrders = s.pedidos.some((o) => o.clienteId === id);
+        if (hasOrders) {
+          UI.toast("Não é possível excluir: cliente possui pedidos.");
+          return;
+        }
+
+        const cli = s.clientes[idx];
+        s.clientes.splice(idx, 1);
+
+        Store.addActivity("new", "Cliente removido", `Cliente: ${cli.nome}`);
+        Store.save();
+        UI.toast("Cliente removido.");
+
+        renderClientes();
+        refreshOrderInputs();
+        refreshDashboard();
+      });
+    });
+  }
+
+  function setupClienteForm() {
+    const form = document.getElementById("formCliente");
+    if (!form) return;
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const nome = document.getElementById("cNome").value.trim();
+      const tel = document.getElementById("cTel").value.trim();
+      const email = document.getElementById("cEmail").value.trim();
+
+      const cepRaw = document.getElementById("cCep").value;
+      const cepDigits = onlyDigits(cepRaw);
+
+      const numero = document.getElementById("cNumero").value.trim();
+
+      if (!nome || !email) {
+        UI.toast("Preencha nome e e-mail.");
+        return;
+      }
+
+      if (cepDigits.length !== 8) {
+        UI.toast("Informe um CEP válido (8 dígitos).");
+        return;
+      }
+
+      // garante que endereço foi preenchido (ou tenta preencher)
+      if (!document.getElementById("cCidade").value || !document.getElementById("cUf").value) {
+        const ok = await fetchCepAndFill();
+        if (!ok) return;
+      }
+
+      if (!numero) {
+        UI.toast("Preencha o número do endereço.");
+        return;
+      }
+
+      const endereco = {
+        cep: formatCep(cepRaw),
+        rua: document.getElementById("cRua").value.trim(),
+        bairro: document.getElementById("cBairro").value.trim(),
+        cidade: document.getElementById("cCidade").value.trim(),
+        uf: document.getElementById("cUf").value.trim(),
+        numero,
+      };
+
+      const c = {
+        id: s.seq.cliente++,
+        nome,
+        tel,
+        email,
+        endereco,
+        createdAt: Date.now(),
+      };
+
+      s.clientes.unshift(c);
+
+      Store.addActivity("new", "Cliente cadastrado", `Cliente: ${nome}`);
+      Store.save();
+      UI.toast("Cliente cadastrado!");
+
+      form.reset();
+      clearAddressFields();
+      setCepHint("Digite o CEP e clique em Buscar. Endereço vem automático 😎", "muted");
+
+      renderClientes();
+      refreshOrderInputs();
+      refreshDashboard();
+    });
+  }
+
+  // --- CEP helpers (no teu estilo: simples e direto) ---
+  function onlyDigits(str) {
+    return (str || "").replace(/\D/g, "");
+  }
+
+  function formatCep(value) {
+    const d = onlyDigits(value).slice(0, 8);
+    if (d.length <= 5) return d;
+    return `${d.slice(0, 5)}-${d.slice(5)}`;
+  }
+
+  function setCepHint(text, mode = "muted") {
+    const hint = document.getElementById("cepHint");
+    if (!hint) return;
+    hint.textContent = text;
+    hint.style.color =
+      mode === "ok" ? "var(--green)" : mode === "err" ? "var(--danger)" : "var(--muted)";
+  }
+
+  function clearAddressFields() {
+    const ids = ["cRua", "cBairro", "cCidade", "cUf"];
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.value = "";
+    });
+  }
+
+  function setCepLoading(isLoading) {
+    const btn = document.getElementById("btnBuscarCep");
+    const inp = document.getElementById("cCep");
+
+    if (btn) {
+      btn.disabled = isLoading;
+      btn.textContent = isLoading ? "Buscando..." : "Buscar";
+    }
+    if (inp) inp.disabled = isLoading;
+  }
+
+  async function fetchCepAndFill() {
+    const cCep = document.getElementById("cCep");
+    const raw = cCep?.value || "";
+    const cep = onlyDigits(raw);
+
+    if (cep.length !== 8) {
+      clearAddressFields();
+      setCepHint("❌ CEP inválido. Use 8 dígitos (ex.: 01001000).", "err");
+      return false;
+    }
+
+    setCepLoading(true);
+    setCepHint("Consultando CEP na BrasilAPI...", "muted");
+
+    try {
+      const res = await fetch(`https://brasilapi.com.br/api/cep/v1/${cep}`);
+      if (!res.ok) {
+        clearAddressFields();
+        setCepHint("❌ CEP não encontrado. Confere e tenta novamente.", "err");
+        return false;
+      }
+
+      const data = await res.json();
+
+      document.getElementById("cRua").value = data.street || "";
+      document.getElementById("cBairro").value = data.neighborhood || "";
+      document.getElementById("cCidade").value = data.city || "";
+      document.getElementById("cUf").value = data.state || "";
+
+      setCepHint("✅ Endereço preenchido! Agora só digitar o número.", "ok");
+      UI.toast("CEP consultado com sucesso!");
+      return true;
+    } catch {
+      clearAddressFields();
+      setCepHint("❌ Falha ao consultar a API. Verifique sua conexão.", "err");
+      return false;
+    } finally {
+      setCepLoading(false);
+      if (cCep) cCep.value = formatCep(cCep.value);
+    }
+  }
+
+  function setupCepLookup() {
+    const cCep = document.getElementById("cCep");
+    const btn = document.getElementById("btnBuscarCep");
+
+    if (!cCep || !btn) return;
+
+    cCep.addEventListener("input", () => {
+      cCep.value = formatCep(cCep.value);
+      setCepHint("Digite o CEP e clique em Buscar. Endereço vem automático 😎", "muted");
+    });
+
+    btn.addEventListener("click", fetchCepAndFill);
+
+    // UX: se o cara digitar certinho, ao sair do campo ele já puxa
+    cCep.addEventListener("blur", () => {
+      if (onlyDigits(cCep.value).length === 8) fetchCepAndFill();
+    });
+  }
+
   // ---------- USUÁRIOS ----------
   function renderUsuarios() {
     document.getElementById("userCount").textContent = String(s.usuarios.length);
@@ -260,11 +501,6 @@ const Admin = (() => {
     tbody.querySelectorAll("[data-del-user]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const id = Number(btn.getAttribute("data-del-user"));
-        const hasOrders = s.pedidos.some((o) => o.clienteId === id);
-        if (hasOrders) {
-          UI.toast("Não é possível excluir: usuário tem pedidos.");
-          return;
-        }
 
         const idx = s.usuarios.findIndex((x) => x.id === id);
         if (idx < 0) return;
@@ -277,7 +513,6 @@ const Admin = (() => {
         UI.toast("Usuário removido.");
 
         renderUsuarios();
-        refreshOrderInputs();
         refreshDashboard();
       });
     });
@@ -359,7 +594,6 @@ const Admin = (() => {
       }
 
       renderUsuarios();
-      refreshOrderInputs();
       refreshDashboard();
     });
   }
@@ -369,15 +603,18 @@ const Admin = (() => {
     const selCliente = document.getElementById("oCliente");
     const selProduto = document.getElementById("oProduto");
 
+    // ✅ agora pedidos usam CLIENTES (não usuários)
     if (selCliente) {
-      if (!s.usuarios.length) {
-        selCliente.innerHTML = `<option value="">Cadastre um usuário</option>`;
+      const clientes = s.clientes || [];
+
+      if (!clientes.length) {
+        selCliente.innerHTML = `<option value="">Cadastre um cliente</option>`;
         selCliente.disabled = true;
       } else {
         selCliente.disabled = false;
         selCliente.innerHTML =
           `<option value="">Selecione um cliente</option>` +
-          s.usuarios.map((u) => `<option value="${u.id}">${UI.escapeHtml(u.nome)}</option>`).join("");
+          clientes.map((c) => `<option value="${c.id}">${UI.escapeHtml(c.nome)}</option>`).join("");
       }
     }
 
@@ -464,7 +701,7 @@ const Admin = (() => {
         const badgeCls =
           key === "done" ? "badge--done" : key === "way" ? "badge--way" : "badge--prep";
 
-        const cliente = s.usuarios.find((u) => u.id === o.clienteId)?.nome || "—";
+        const cliente = (s.clientes || []).find((c) => c.id === o.clienteId)?.nome || "—";
         const total = Store.moneyBR(orderTotal(o));
         const itens = o.itens.map((i) => `${i.qtd} x ${UI.escapeHtml(i.nome)}`).join("<br/>");
 
@@ -595,7 +832,7 @@ const Admin = (() => {
       Store.addActivity(
         "new",
         "Novo pedido",
-        `Cliente: ${s.usuarios.find((u) => u.id === clienteId)?.nome || "—"} — agora`
+        `Cliente: ${(s.clientes || []).find((c) => c.id === clienteId)?.nome || "—"} — agora`
       );
 
       Store.save(); // ✅ persistência
@@ -639,6 +876,8 @@ const Admin = (() => {
     setupDropzone();
     setupProdutoForm();
 
+    setupClientes(); // ✅ NOVO
+
     setupUserSuggest();
     setupUsuarioForm();
 
@@ -646,7 +885,9 @@ const Admin = (() => {
     setupDarkMode();
 
     renderProdutos();
+    renderClientes(); // ✅ NOVO
     renderUsuarios();
+
     refreshOrderInputs();
     renderOrders();
     refreshDashboard();

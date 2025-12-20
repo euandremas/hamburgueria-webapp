@@ -4,9 +4,15 @@ const Store = (() => {
   const state = {
     produtos: [],
     usuarios: [],
+    clientes: [], // ✅ NOVO
     pedidos: [],
     activities: [],
-    seq: { produto: 1, usuario: 1, pedido: 9 } // começa em 9 pq seed usa 6/7/8
+    seq: {
+      produto: 1,
+      usuario: 1,
+      cliente: 1, // ✅ NOVO
+      pedido: 9 // começa em 9 pq seed usa 6/7/8
+    }
   };
 
   function moneyBR(n) {
@@ -94,14 +100,18 @@ const Store = (() => {
     const safe = {
       produtos: Array.isArray(obj?.produtos) ? obj.produtos : [],
       usuarios: Array.isArray(obj?.usuarios) ? obj.usuarios : [],
+      clientes: Array.isArray(obj?.clientes) ? obj.clientes : [], // ✅ NOVO
       pedidos: Array.isArray(obj?.pedidos) ? obj.pedidos : [],
       activities: Array.isArray(obj?.activities) ? obj.activities : [],
-      seq: obj?.seq && typeof obj.seq === "object" ? obj.seq : { produto: 1, usuario: 1, pedido: 1 }
+      seq: obj?.seq && typeof obj.seq === "object"
+        ? obj.seq
+        : { produto: 1, usuario: 1, cliente: 1, pedido: 1 }
     };
 
     // garante seq mínima coerente
     safe.seq.produto = Number(safe.seq.produto || 1);
     safe.seq.usuario = Number(safe.seq.usuario || 1);
+    safe.seq.cliente = Number(safe.seq.cliente || 1); // ✅ NOVO
     safe.seq.pedido = Number(safe.seq.pedido || 1);
 
     return safe;
@@ -117,6 +127,7 @@ const Store = (() => {
 
       state.produtos = safe.produtos;
       state.usuarios = safe.usuarios;
+      state.clientes = safe.clientes; // ✅ NOVO
       state.pedidos = safe.pedidos;
       state.activities = safe.activities;
       state.seq = safe.seq;
@@ -130,6 +141,9 @@ const Store = (() => {
 
       const maxUser = state.usuarios.reduce((m, u) => Math.max(m, Number(u.id || 0)), 0);
       if (maxUser > 0) state.seq.usuario = Math.max(state.seq.usuario, maxUser + 1);
+
+      const maxCli = state.clientes.reduce((m, c) => Math.max(m, Number(c.id || 0)), 0);
+      if (maxCli > 0) state.seq.cliente = Math.max(state.seq.cliente, maxCli + 1);
 
       return true;
     } catch {
@@ -157,13 +171,69 @@ const Store = (() => {
     if (loaded) return;
 
     // 2) se não existe nada salvo, gera demo
-    if (state.produtos.length || state.usuarios.length || state.pedidos.length) return;
+    if (
+      state.produtos.length ||
+      state.usuarios.length ||
+      state.clientes.length ||
+      state.pedidos.length
+    ) return;
 
-    // usuários
+    // usuários (mantém, pq tua tela Usuários existe)
     const u1 = { id: state.seq.usuario++, nome: "Maria Oliveira", username: "maria.oliveira", senha: "123456" };
     const u2 = { id: state.seq.usuario++, nome: "Pedro Santos", username: "pedro.santos", senha: "123456" };
     const u3 = { id: state.seq.usuario++, nome: "Ana Silva", username: "ana.silva", senha: "123456" };
     state.usuarios.push(u1, u2, u3);
+
+    // ✅ clientes (agora pedidos usam clientes)
+    const c1 = {
+      id: state.seq.cliente++,
+      nome: "Maria Oliveira",
+      tel: "(11) 98888-1111",
+      email: "maria@email.com",
+      endereco: {
+        cep: "01001-000",
+        rua: "Praça da Sé",
+        bairro: "Sé",
+        cidade: "São Paulo",
+        uf: "SP",
+        numero: "100"
+      },
+      createdAt: Date.now() - 40 * 60_000
+    };
+
+    const c2 = {
+      id: state.seq.cliente++,
+      nome: "Pedro Santos",
+      tel: "(11) 97777-2222",
+      email: "pedro@email.com",
+      endereco: {
+        cep: "01310-000",
+        rua: "Avenida Paulista",
+        bairro: "Bela Vista",
+        cidade: "São Paulo",
+        uf: "SP",
+        numero: "1578"
+      },
+      createdAt: Date.now() - 35 * 60_000
+    };
+
+    const c3 = {
+      id: state.seq.cliente++,
+      nome: "Ana Silva",
+      tel: "(11) 96666-3333",
+      email: "ana@email.com",
+      endereco: {
+        cep: "20040-020",
+        rua: "Rua da Assembleia",
+        bairro: "Centro",
+        cidade: "Rio de Janeiro",
+        uf: "RJ",
+        numero: "50"
+      },
+      createdAt: Date.now() - 30 * 60_000
+    };
+
+    state.clientes.push(c1, c2, c3);
 
     // produtos
     const p1 = { id: state.seq.produto++, tipo: "Hambúrguer", nome: "X-Bacon", desc: "Hambúrguer, bacon crocante, queijo cheddar, alface e tomate", preco: 25.9, imgDataUrl: "" };
@@ -171,11 +241,11 @@ const Store = (() => {
     const p3 = { id: state.seq.produto++, tipo: "Hambúrguer", nome: "X-Salada", desc: "Hambúrguer, queijo, alface, tomate, cebola e maionese", preco: 22.9, imgDataUrl: "" };
     state.produtos.push(p1, p2, p3);
 
-    // pedidos 006/007/008
+    // pedidos 006/007/008 (agora apontando pra clientes)
     state.pedidos.push(
       {
         id: 8,
-        clienteId: u3.id,
+        clienteId: c3.id,
         itens: [
           { produtoId: p2.id, nome: p2.nome, preco: p2.preco, qtd: 1 },
           { produtoId: p1.id, nome: p1.nome, preco: p1.preco, qtd: 1 },
@@ -187,7 +257,7 @@ const Store = (() => {
       },
       {
         id: 7,
-        clienteId: u2.id,
+        clienteId: c2.id,
         itens: [{ produtoId: p1.id, nome: p1.nome, preco: p1.preco, qtd: 2 }],
         status: "Em preparação",
         etaMin: 15,
@@ -196,7 +266,7 @@ const Store = (() => {
       },
       {
         id: 6,
-        clienteId: u1.id,
+        clienteId: c1.id,
         itens: [{ produtoId: p2.id, nome: p2.nome, preco: p2.preco, qtd: 2 }],
         status: "Em preparação",
         etaMin: 25,
