@@ -11,9 +11,9 @@
   <!-- Toast -->
   <div id="alert" class="alert is-hidden" aria-live="polite"></div>
 
-  <!-- Loja -->
+  <!-- Topbar -->
   <header class="topbar">
-    <div class="brand">
+    <div class="brand" id="btn-home" role="button" tabindex="0" aria-label="Ir para a Loja">
       <span class="brand__icon">🍔</span>
       <div class="brand__text">
         <strong>BurgerPlace</strong>
@@ -36,7 +36,8 @@
     </div>
   </header>
 
-  <main class="store">
+  <!-- LOJA (VIEW) -->
+  <main id="view-store" class="store view is-visible">
     <section class="hero">
       <h1>Cardápio Especial</h1>
       <p>Escolha seu hambúrguer favorito</p>
@@ -56,6 +57,87 @@
           </div>
         </article>
       </div>
+    </section>
+  </main>
+
+  <!-- CLIENTE (VIEW - TELA CHEIA) -->
+  <main id="view-cliente" class="cliente view">
+    <section class="cliente-shell">
+      <header class="cliente-top">
+        <div>
+          <h2 id="cliente-page-title">Área do Cliente</h2>
+          <p class="muted" id="cliente-page-subtitle">Cadastre-se ou acompanhe seus pedidos</p>
+        </div>
+
+        <div class="cliente-top__actions">
+          <button id="btn-cliente-voltar" class="btn btn--ghost" type="button">↩ Voltar para a Loja</button>
+        </div>
+      </header>
+
+      <div class="tabs">
+        <button class="tab is-active" type="button" data-ctab="login">Login</button>
+        <button class="tab" type="button" data-ctab="cadastro">Cadastro</button>
+        <button class="tab" type="button" data-ctab="meuspedidos">Meus Pedidos</button>
+      </div>
+
+      <section class="tabpage is-visible" id="cliente-login">
+        <form id="form-cliente-login" class="form">
+          <label class="field">
+            <span class="field__label">Usuário</span>
+            <input id="cliente-login-user" type="text" placeholder="ex: andre" required />
+          </label>
+          <label class="field">
+            <span class="field__label">Senha</span>
+            <input id="cliente-login-pass" type="password" placeholder="••••••••" required />
+          </label>
+          <button class="btn btn--primary btn--wide" type="submit">Entrar</button>
+          <p class="hint">Dica: cadastre um usuário em “Cadastro” 😉</p>
+        </form>
+      </section>
+
+      <section class="tabpage" id="cliente-cadastro">
+        <form id="form-cliente-cadastro" class="form">
+          <label class="field">
+            <span class="field__label">Nome</span>
+            <input id="cliente-nome" type="text" placeholder="Seu nome" required />
+          </label>
+
+          <label class="field">
+            <span class="field__label">Usuário</span>
+            <input id="cliente-user" type="text" placeholder="ex: andre" required />
+          </label>
+
+          <label class="field">
+            <span class="field__label">E-mail</span>
+            <input id="cliente-email" type="email" placeholder="andre@email.com" required />
+          </label>
+
+          <label class="field">
+            <span class="field__label">Senha</span>
+            <input id="cliente-pass" type="password" placeholder="mínimo 4 caracteres" required />
+          </label>
+
+          <label class="field">
+            <span class="field__label">Preferência de Notificação</span>
+            <select id="cliente-notif">
+              <option value="webapp">WebApp</option>
+              <option value="whatsapp">WhatsApp</option>
+            </select>
+          </label>
+
+          <button class="btn btn--primary btn--wide" type="submit">Cadastrar</button>
+        </form>
+      </section>
+
+      <section class="tabpage" id="cliente-meuspedidos">
+        <div class="panel">
+          <div class="panel__top">
+            <h3>Meus Pedidos</h3>
+            <div class="muted">Status + tempo estimado</div>
+          </div>
+          <div id="meus-pedidos" class="orders-client"></div>
+        </div>
+      </section>
     </section>
   </main>
 
@@ -80,74 +162,6 @@
     </div>
   </section>
 
-  <!-- Cliente -->
-  <section id="cliente-modal" class="modal is-hidden" aria-hidden="true">
-    <div class="modal__backdrop" data-cliente-close></div>
-
-    <div class="modal__panel" role="dialog" aria-modal="true" aria-label="Área do Cliente">
-      <div class="modal__top">
-        <h3 id="cliente-titulo">Área do Cliente</h3>
-        <button class="icon-btn" type="button" data-cliente-close aria-label="Fechar">✕</button>
-      </div>
-
-      <div class="tabs">
-        <button class="tab is-active" type="button" data-ctab="login">Login</button>
-        <button class="tab" type="button" data-ctab="cadastro">Cadastro</button>
-        <button class="tab" type="button" data-ctab="meuspedidos">Meus Pedidos</button>
-      </div>
-
-      <div class="tabpage is-visible" id="cliente-login">
-        <form id="form-cliente-login" class="form">
-          <label class="field">
-            <span class="field__label">Usuário</span>
-            <input id="cliente-login-user" type="text" placeholder="ex: andre" required />
-          </label>
-          <label class="field">
-            <span class="field__label">Senha</span>
-            <input id="cliente-login-pass" type="password" placeholder="••••••••" required />
-          </label>
-          <button class="btn btn--primary btn--wide" type="submit">Entrar</button>
-          <p class="hint">Dica: cadastre um usuário em “Cadastro” 😉</p>
-        </form>
-      </div>
-
-      <div class="tabpage" id="cliente-cadastro">
-        <form id="form-cliente-cadastro" class="form">
-          <label class="field">
-            <span class="field__label">Nome</span>
-            <input id="cliente-nome" type="text" placeholder="Seu nome" required />
-          </label>
-          <label class="field">
-            <span class="field__label">Usuário</span>
-            <input id="cliente-user" type="text" placeholder="ex: andre" required />
-          </label>
-          <label class="field">
-            <span class="field__label">E-mail</span>
-            <input id="cliente-email" type="email" placeholder="andre@email.com" required />
-          </label>
-          <label class="field">
-            <span class="field__label">Senha</span>
-            <input id="cliente-pass" type="password" placeholder="mínimo 4 caracteres" required />
-          </label>
-
-          <label class="field">
-            <span class="field__label">Preferência de Notificação</span>
-            <select id="cliente-notif">
-              <option value="webapp">WebApp</option>
-              <option value="whatsapp">WhatsApp</option>
-            </select>
-          </label>
-
-          <button class="btn btn--primary btn--wide" type="submit">Cadastrar</button>
-        </form>
-      </div>
-
-      <div class="tabpage" id="cliente-meuspedidos">
-        <div id="meus-pedidos" class="orders-client"></div>
-      </div>
-    </div>
-  </section>
-
   <!-- Admin Overlay -->
   <section id="admin" class="admin is-hidden" aria-hidden="true">
     <div class="admin__backdrop" data-admin-close></div>
@@ -155,7 +169,7 @@
     <div class="admin__panel" role="dialog" aria-modal="true" aria-label="Área Administrativa">
       <button id="btn-admin-close" class="admin__close icon-btn" type="button" aria-label="Fechar">✕</button>
 
-      <!-- LOGIN (SOMENTE LOGIN) -->
+      <!-- LOGIN -->
       <div id="admin-login" class="admin-login">
         <div class="login-card">
           <div class="login-card__logo">
@@ -188,7 +202,7 @@
         </div>
       </div>
 
-      <!-- APP (SOMENTE ADMIN) -->
+      <!-- APP -->
       <div id="admin-app" class="admin-app is-hidden">
         <aside class="admin-sidebar">
           <div class="admin-sidebar__brand">
@@ -260,6 +274,7 @@
         </aside>
 
         <section class="admin-main">
+          <!-- Dashboard -->
           <section id="admin-dashboard" class="admin-page is-visible">
             <header class="admin-header">
               <h1>Dashboard</h1>
@@ -303,6 +318,7 @@
             </div>
           </section>
 
+          <!-- Produtos -->
           <section id="admin-produtos" class="admin-page">
             <header class="admin-header">
               <h1>Produtos</h1>
@@ -387,6 +403,7 @@
             </div>
           </section>
 
+          <!-- Usuários -->
           <section id="admin-usuarios" class="admin-page">
             <header class="admin-header">
               <h1>Usuários</h1>
@@ -438,7 +455,7 @@
               <div class="panel">
                 <div class="panel__top">
                   <h3>Usuários Cadastrados (<span id="count-usuarios">0</span>)</h3>
-                  <input id="filtro-usuario" class="search" type="search" placeholder="Filtrar por nome ou e-mail..." />
+                  <input id="filtro-usuario" class="search" type="search" placeholder="Filtrar por nome, e-mail ou usuário..." />
                 </div>
 
                 <div class="table-wrap">
@@ -459,6 +476,7 @@
             </div>
           </section>
 
+          <!-- Pedidos -->
           <section id="admin-pedidos" class="admin-page">
             <header class="admin-header">
               <h1>Pedidos</h1>
@@ -467,7 +485,7 @@
 
             <div class="grid-2">
               <div class="panel">
-                <h3>+ Novo Pedido</h3>
+                <h3>+ Novo Pedido (Admin)</h3>
 
                 <form id="form-pedido" class="form">
                   <label class="field">
@@ -521,6 +539,7 @@
             </div>
           </section>
 
+          <!-- Config -->
           <section id="admin-config" class="admin-page">
             <header class="admin-header">
               <h1>Configurações</h1>
