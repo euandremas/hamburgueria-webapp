@@ -1,12 +1,11 @@
 {
   "name": "BurgerPlace",
   "short_name": "BurgerPlace",
-  "description": "Sistema web para gerenciamento de pedidos de hamburgueria.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#FF7A00",
-  "theme_color": "#FF7A00",
+  "background_color": "transparent",
+  "theme_color": "#0f172a",
   "icons": [
     {
       "src": "./img/icons/icon-192.png",
