@@ -13,6 +13,7 @@ Sistema web para gestão de uma hamburgueria, desenvolvido como parte da discipl
 - LocalStorage
 - API pública (BrasilAPI)
 - PWA (Progressive Web App)
+- Cypress (Testes automatizados E2E)
 - GitHub Pages (Deploy)
 
 ---
@@ -41,20 +42,49 @@ Acesse o sistema em produção:
 
 ---
 
-## 🧪 Testes de Usabilidade
+## 🧪 Testes de Software (Unidade 4)
 
-Antes da migração definitiva para código, foram realizados testes de usabilidade com usuários reais, cujos feedbacks orientaram melhorias na interface, navegação e responsividade do sistema.
+O sistema possui **testes automatizados end-to-end** desenvolvidos com **Cypress**, cobrindo os principais fluxos da aplicação, como:
+
+- Acesso ao sistema
+- Cadastro de produtos
+- Cadastro de usuários
+- Criação de pedidos
+- Alteração de status de pedidos
+
+Os cenários de teste estão documentados em:
+
+📄 `docs/cenarios-de-teste.md`
 
 ---
 
-## 📌 Status do Projeto
+## ▶️ Como executar o projeto localmente
 
-🚧 Projeto em desenvolvimento — **Atividade 2 (PPE II)**  
-Sistema funcional, com melhorias contínuas baseadas em usabilidade e decisões técnicas.
+```bash
+npm install
+npm run serve
 
----
+O sistema ficará disponível em:
+👉 http://localhost:8080
 
-## 👨‍💻 Autor
+▶️ Como executar os testes automatizados
 
-**André**  
-Projeto acadêmico desenvolvido para a disciplina _Projetos e Práticas de Extensão II_.
+Abrir interface do Cypress:
+
+npm run cy:open
+
+
+Executar testes em modo headless:
+
+npm run cy:run
+
+📌 Status do Projeto
+
+✅ Atividade 4 concluída — Qualidade e Testes de Software
+Sistema funcional, testado e documentado, pronto para a entrega final da disciplina.
+
+👨‍💻 Autor
+
+André
+Projeto acadêmico desenvolvido para a disciplina Projetos e Práticas de Extensão II.
+```
