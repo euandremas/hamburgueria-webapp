@@ -1,0 +1,27 @@
+{
+  "name": "hamburgueria-webapp",
+  "version": "1.0.0",
+  "description": "Sistema web para gestão de uma hamburgueria, desenvolvido como parte da disciplina\r **Projetos e Práticas de Extensão II**, com foco na migração de uma solução NoCode para uma aplicação web moderna em código.",
+  "main": "sw.js",
+  "scripts": {
+  "serve": "http-server . -p 8080 -c-1",
+  "cy:open": "cypress open",
+  "cy:run": "cypress run",
+  "test": "npm run cy:run"
+},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/euandremas/hamburgueria-webapp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/euandremas/hamburgueria-webapp/issues"
+  },
+  "homepage": "https://github.com/euandremas/hamburgueria-webapp#readme",
+  "devDependencies": {
+    "cypress": "^15.8.1",
+    "http-server": "^14.1.1"
+  }
+}
