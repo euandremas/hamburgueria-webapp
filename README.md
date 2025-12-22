@@ -1,86 +1,94 @@
-# Burger Place Admin 🍔
+# 🍔 Burger Place Admin
 
-Sistema web para gestão de uma hamburgueria, desenvolvido como parte da disciplina **Projetos e Práticas de Extensão II**, com foco na migração de uma solução NoCode para uma aplicação web moderna baseada em código.
-
----
-
-## 🔧 Tecnologias Utilizadas
-
-- HTML5
-- CSS3 (layout responsivo e modo escuro)
-- JavaScript (Vanilla JS)
-- LocalStorage
-- API pública (BrasilAPI)
-- PWA (Progressive Web App)
-- Cypress (testes automatizados end-to-end)
-- GitHub Pages (deploy)
+Sistema web para gestão de uma hamburgueria, desenvolvido como parte da disciplina **Projetos e Práticas de Extensão II**, com foco na migração de uma solução inicialmente criada em ambiente **NoCode** para uma aplicação web moderna desenvolvida com **código**.
 
 ---
 
-## 🌐 Deploy
+## 🧰 Tecnologias Utilizadas
 
-Acesse o sistema em produção:
-👉 [https://euandremas.github.io/hamburgueria-webapp/](https://euandremas.github.io/hamburgueria-webapp/)
-
-> O sistema pode ser instalado como aplicativo no desktop ou no celular por meio de navegadores compatíveis com PWA.
-
----
-
-## 📱 Funcionalidades
-
-- Login administrativo
-- Dashboard com indicadores
-- Gestão de produtos
-- Cadastro de clientes com preenchimento automático de endereço via CEP (BrasilAPI)
-- Gerenciamento de pedidos
-- Alteração de status dos pedidos
-- Persistência de dados com LocalStorage
-- Modo escuro
-- Interface totalmente responsiva
-- Suporte à instalação como aplicativo (PWA)
+- 🧱 **HTML5** – Estrutura das páginas
+- 🎨 **CSS3** – Layout responsivo e modo escuro
+- ⚙️ **JavaScript (Vanilla JS)** – Lógica de negócio e manipulação do DOM
+- 💾 **LocalStorage** – Persistência de dados no navegador
+- 🌐 **BrasilAPI** – Preenchimento automático de endereço via CEP
+- 📱 **PWA (Progressive Web App)** – Instalação como aplicativo
+- 🧪 **Cypress** – Testes automatizados end-to-end
+- 🚀 **GitHub Pages** – Deploy em ambiente de produção
 
 ---
 
-## 🧪 Testes de Software (Unidade 4)
+## 🌍 Deploy
 
-O sistema possui **testes automatizados end-to-end** desenvolvidos com **Cypress**, cobrindo os principais fluxos da aplicação:
+O sistema está disponível em ambiente de produção no link abaixo:
 
-- Acesso ao sistema
-- Cadastro de produtos
-- Cadastro de usuários
-- Criação de pedidos
-- Alteração de status de pedidos
+👉 **[https://euandremas.github.io/hamburgueria-webapp/](https://euandremas.github.io/hamburgueria-webapp/)**
 
-Os cenários de teste estão documentados no arquivo:
-
-📄 `docs/cenarios-de-teste.md`
-
-Os testes foram executados com sucesso tanto em ambiente local quanto em ambiente de produção (GitHub Pages), simulando o acesso real do usuário final.
+> 💡 A aplicação pode ser instalada como aplicativo no desktop ou em dispositivos móveis por meio de navegadores compatíveis com PWA.
 
 ---
 
-## ▶️ Como executar o projeto localmente
+## 📋 Funcionalidades
 
-Instale as dependências e inicie o servidor local:
+- 🔐 Autenticação administrativa
+- 📊 Dashboard com indicadores
+- 🍔 Cadastro e gerenciamento de produtos
+- 👥 Cadastro de clientes com preenchimento automático de endereço via CEP
+- 🧾 Criação e gerenciamento de pedidos
+- 🔄 Alteração de status dos pedidos
+- 💾 Persistência de dados utilizando LocalStorage
+- 🌗 Modo escuro
+- 📱 Interface totalmente responsiva
+- 📲 Suporte à instalação como aplicativo (PWA)
+
+---
+
+## 🧪 Testes de Software
+
+O projeto conta com **testes automatizados end-to-end** desenvolvidos com **Cypress**, cobrindo os principais fluxos do sistema:
+
+- ✅ Acesso ao sistema
+- ✅ Cadastro de produtos
+- ✅ Cadastro de usuários
+- ✅ Criação de pedidos
+- ✅ Alteração de status dos pedidos
+
+📄 Os cenários de teste estão documentados no arquivo:
+
+`docs/cenarios-de-teste.md`
+
+---
+
+## ▶️ Como Executar o Projeto Localmente
+
+1️⃣ Instale as dependências do projeto:
 
 ```bash
 npm install
+```
+
+2️⃣ Execute o projeto em ambiente local:
+
+```bash
 npm run serve
 ```
 
-Após a execução, o sistema ficará disponível localmente no navegador.
+📍 O sistema ficará disponível em:
+
+```
+http://localhost:8080
+```
 
 ---
 
-## ▶️ Como executar os testes automatizados
+## 🧪 Executar os Testes Automatizados
 
-Abrir a interface gráfica do Cypress:
+🔹 Abrir a interface do Cypress:
 
 ```bash
 npm run cy:open
 ```
 
-Executar os testes em modo headless (via terminal):
+🔹 Executar os testes em modo headless:
 
 ```bash
 npm run cy:run
@@ -88,14 +96,22 @@ npm run cy:run
 
 ---
 
+## ⚙️ Considerações Técnicas
+
+O sistema não utiliza banco de dados externo, fazendo uso do **LocalStorage** para persistência de dados no navegador. Essa decisão foi tomada considerando o escopo acadêmico do projeto e a facilidade de execução e demonstração da aplicação.
+
+📌 Em um cenário de produção real, essa abordagem poderia ser substituída por um backend dedicado e banco de dados persistente.
+
+---
+
 ## 📌 Status do Projeto
 
-✅ **Atividade 4 concluída — Qualidade e Testes de Software**
-Sistema funcional, testado e documentado, pronto para a entrega final da disciplina.
+✅ Sistema funcional, testado e documentado
+✅ Pronto para a entrega final da disciplina **Projetos e Práticas de Extensão II**
 
 ---
 
 ## 👨‍💻 Autor
 
 **André**
-Projeto acadêmico desenvolvido para a disciplina _Projetos e Práticas de Extensão II_.
+Projeto acadêmico desenvolvido para a disciplina **Projetos e Práticas de Extensão II**.
