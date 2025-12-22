@@ -42,6 +42,49 @@ O sistema está disponível em ambiente de produção no link abaixo:
 
 ---
 
+## 📁 Estrutura do Projeto
+
+A estrutura do projeto foi organizada de forma modular, visando facilitar a manutenção, a leitura do código e a execução dos testes. O diretório `node_modules` não é versionado, conforme boas práticas de versionamento com Git, estando devidamente configurado no arquivo `.gitignore`.
+
+```text
+hamburgueria-webapp/
+├── css/
+│   ├── admin.css        # Estilos específicos da área administrativa
+│   ├── base.css         # Estilos globais e compartilhados do sistema
+│   └── login.css        # Estilos da tela de autenticação
+│
+├── js/
+│   ├── admin.js         # Lógica da área administrativa
+│   ├── auth.js          # Controle de autenticação e acesso
+│   ├── pwa.js           # Configurações do Progressive Web App
+│   ├── store.js         # Persistência de dados utilizando LocalStorage
+│   └── ui.js            # Manipulação da interface e componentes visuais
+│
+├── img/
+│   ├── icons/           # Ícones utilizados na interface
+│   └── bg-burger.png    # Imagem de fundo do sistema
+│
+├── docs/
+│   └── cenarios-de-teste.md  # Documentação dos cenários de teste
+│
+├── cypress/
+│   ├── e2e/             # Testes automatizados end-to-end
+│   ├── fixtures/        # Dados mock utilizados nos testes
+│   └── support/         # Configurações e comandos de suporte do Cypress
+│
+├── admin.html           # Tela administrativa do sistema
+├── index.html           # Página principal da aplicação
+├── manifest.webmanifest # Manifesto do Progressive Web App (PWA)
+├── sw.js                # Service Worker para funcionamento offline
+├── cypress.config.js    # Arquivo de configuração do Cypress
+├── package.json         # Dependências e scripts do projeto
+├── package-lock.json    # Controle de versões das dependências
+├── .gitignore           # Arquivo de exclusão do versionamento (node_modules)
+└── README.md            # Documentação geral do projeto
+```
+
+---
+
 ## 🧪 Testes de Software
 
 O projeto conta com **testes automatizados end-to-end** desenvolvidos com **Cypress**, cobrindo os principais fluxos do sistema:
