@@ -2,8 +2,9 @@ const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
   e2e: {
+    baseUrl: "https://euandremas.github.io/hamburgueria-webapp",
     setupNodeEvents(on, config) {
-      // implement node event listeners here
+      // eventos do Cypress (não utilizados neste projeto)
     },
   },
 });
