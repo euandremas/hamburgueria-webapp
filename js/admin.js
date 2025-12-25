@@ -306,14 +306,44 @@ const Admin = (() => {
     });
   }
 
-  // ---------- CLIENTES (NOVO + BRASILAPI) ----------
-  function setupClientes() {
-    setupCepLookup();
-    setupClienteForm();
-    renderClientes();
-  }
+// ---------- CLIENTES (NOVO + BRASILAPI + MÁSCARA TELEFONE) ----------
+function setupClientes() {
+  setupCepLookup();
+  setupTelefoneMask(); // ✅ NOVO: máscara telefone
+  setupClienteForm();
+  renderClientes();
+}
 
-  function renderClientes() {
+// --- ✅ MÁSCARA TELEFONE (11) 99999-9999 ---
+function setupTelefoneMask() {
+  const telInput = document.getElementById("cTel");
+  if (!telInput) return;
+
+  // tamanho exato do formato: (11) 99999-9999 => 15 chars
+  telInput.setAttribute("maxlength", "15");
+
+  telInput.addEventListener("input", (e) => {
+    let v = (e.target.value || "").replace(/\D/g, "");
+
+    // limita em 11 dígitos (DDD + 9 + 4)
+    if (v.length > 11) v = v.slice(0, 11);
+
+    if (v.length > 6) {
+      // (11) 99999-9999
+      v = v.replace(/^(\d{2})(\d{5})(\d{0,4}).*/, "($1) $2-$3");
+    } else if (v.length > 2) {
+      // (11) 99999
+      v = v.replace(/^(\d{2})(\d{0,5}).*/, "($1) $2");
+    } else if (v.length > 0) {
+      // (11
+      v = v.replace(/^(\d{0,2}).*/, "($1");
+    }
+
+  e.target.value = v;
+});
+}
+
+function renderClientes() {
     const elCount = document.getElementById("clientCount");
     if (elCount) elCount.textContent = String((s.clientes || []).length);
 
