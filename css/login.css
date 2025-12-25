@@ -115,3 +115,21 @@ body::before {
   color: rgba(255,255,255,0.8);    /* 🔥 CONTRASTE */
   text-align: center;
 }
+/* Centraliza apenas o conteúdo do formulário */
+.login-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Centraliza o título */
+.login-card h2 {
+  text-align: center;
+  width: 100%;
+}
+
+/* Centraliza os campos mantendo largura controlada */
+.login-card .form {
+  width: 100%;
+  max-width: 320px;
+}
